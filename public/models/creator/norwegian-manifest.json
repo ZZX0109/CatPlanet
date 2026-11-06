@@ -1,0 +1,564 @@
+{
+  "templateId": "norwegian-cat-v1",
+  "modelUrl": "/models/creator/norwegian-cat.glb",
+  "source": "assets/source/user-animal-pack-2026-11-04/norwegian-forest/source/Norwegianforest.glb",
+  "sourceSha256": "6b027c8d85a79d6c2a06e24939e0faec13b0aee67c84207249018197e4a756f1",
+  "sourceUnchanged": true,
+  "outputSha256": "bda151cace4e581a2314fe5788bbe27c3fe91cbd589d5ac8f3677d36e481b492",
+  "neutralMeshUnchanged": true,
+  "defaultPose": {
+    "name": "standing-front",
+    "sourceFrame": 53,
+    "yawCorrectionDegrees": 6.627173239516416,
+    "rollCorrectionDegrees": -5.859856234209918,
+    "headForward": [
+      0.0006107059252645347,
+      0,
+      0.999999813519119
+    ],
+    "bodyForward": [
+      0,
+      0,
+      1
+    ],
+    "paws": {
+      "PantherLLegPalm": {
+        "minY": 0,
+        "center": [
+          0.339855017723473,
+          0.16878544685665434,
+          -1.0300667759116369
+        ]
+      },
+      "PantherRLegPalm": {
+        "minY": 2.5331974029541016e-7,
+        "center": [
+          -0.3396594617657989,
+          0.1613224007594506,
+          -0.7696190339918355
+        ]
+      },
+      "PantherLLegPalm (1)": {
+        "minY": 1.0058283805847168e-7,
+        "center": [
+          0.31323777990681784,
+          0.10038753376983396,
+          0.83082911894693
+        ]
+      },
+      "PantherRLegPalm (1)": {
+        "minY": 5.960464477539063e-8,
+        "center": [
+          -0.2360966219022483,
+          0.09974473254005244,
+          1.0166586047256148
+        ]
+      }
+    },
+    "groundSpread": 2.5331974029541016e-7
+  },
+  "sourceVertices": 17625,
+  "boneCount": 49,
+  "blender": "4.5.15 LTS",
+  "shapeTargets": {
+    "Shape_headWidth_low": {
+      "changedVertices": 9846,
+      "maxDisplacementSourceMeters": 0.007038837944696805
+    },
+    "Shape_headWidth_high": {
+      "changedVertices": 9846,
+      "maxDisplacementSourceMeters": 0.007038837944696805
+    },
+    "Shape_headDepth_low": {
+      "changedVertices": 9835,
+      "maxDisplacementSourceMeters": 0.004505105565383243
+    },
+    "Shape_headDepth_high": {
+      "changedVertices": 9835,
+      "maxDisplacementSourceMeters": 0.004505100436867749
+    },
+    "Shape_cheeks_low": {
+      "changedVertices": 9533,
+      "maxDisplacementSourceMeters": 0.004947976956150685
+    },
+    "Shape_cheeks_high": {
+      "changedVertices": 9533,
+      "maxDisplacementSourceMeters": 0.004947976956150685
+    },
+    "Shape_jaw_low": {
+      "changedVertices": 4380,
+      "maxDisplacementSourceMeters": 0.006937085873817549
+    },
+    "Shape_jaw_high": {
+      "changedVertices": 4380,
+      "maxDisplacementSourceMeters": 0.006937085245521121
+    },
+    "Shape_muzzle_low": {
+      "changedVertices": 4726,
+      "maxDisplacementSourceMeters": 0.005499994682606558
+    },
+    "Shape_muzzle_high": {
+      "changedVertices": 4726,
+      "maxDisplacementSourceMeters": 0.005499997384900181
+    },
+    "Shape_muzzleWidth_low": {
+      "changedVertices": 4686,
+      "maxDisplacementSourceMeters": 0.0023112468924742172
+    },
+    "Shape_muzzleWidth_high": {
+      "changedVertices": 4686,
+      "maxDisplacementSourceMeters": 0.0023112468924742172
+    },
+    "Shape_noseBridge_low": {
+      "changedVertices": 4836,
+      "maxDisplacementSourceMeters": 0.003242504895883115
+    },
+    "Shape_noseBridge_high": {
+      "changedVertices": 4836,
+      "maxDisplacementSourceMeters": 0.003242513161568957
+    },
+    "Shape_eyeSize_low": {
+      "changedVertices": 2561,
+      "maxDisplacementSourceMeters": 0.0014651829183465878
+    },
+    "Shape_eyeSize_high": {
+      "changedVertices": 2561,
+      "maxDisplacementSourceMeters": 0.0014651829183465878
+    },
+    "Shape_eyeSpacing_low": {
+      "changedVertices": 2560,
+      "maxDisplacementSourceMeters": 0.002399996286791271
+    },
+    "Shape_eyeSpacing_high": {
+      "changedVertices": 2560,
+      "maxDisplacementSourceMeters": 0.002399996286791271
+    },
+    "Shape_eyeTilt_low": {
+      "changedVertices": 2562,
+      "maxDisplacementSourceMeters": 0.0020217158201540205
+    },
+    "Shape_eyeTilt_high": {
+      "changedVertices": 2562,
+      "maxDisplacementSourceMeters": 0.0020659461829798755
+    },
+    "Shape_earSize_low": {
+      "changedVertices": 3923,
+      "maxDisplacementSourceMeters": 0.008209106798596972
+    },
+    "Shape_earSize_high": {
+      "changedVertices": 3923,
+      "maxDisplacementSourceMeters": 0.008209106798596972
+    },
+    "Shape_earTilt_low": {
+      "changedVertices": 3919,
+      "maxDisplacementSourceMeters": 0.009588139408554512
+    },
+    "Shape_earTilt_high": {
+      "changedVertices": 3920,
+      "maxDisplacementSourceMeters": 0.009588138390383638
+    },
+    "Head_round": {
+      "changedVertices": 9554,
+      "maxDisplacementSourceMeters": 0.006004128593686105
+    },
+    "Head_wedge": {
+      "changedVertices": 9551,
+      "maxDisplacementSourceMeters": 0.003370402440219694
+    },
+    "Blink": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.008067624323404814
+    },
+    "Blink_Shape_headWidth_low": {
+      "changedVertices": 307,
+      "maxDisplacementSourceMeters": 0.00005389377204407101
+    },
+    "Blink_Shape_headWidth_high": {
+      "changedVertices": 307,
+      "maxDisplacementSourceMeters": 0.00005143035569752249
+    },
+    "Blink_Shape_headDepth_low": {
+      "changedVertices": 54,
+      "maxDisplacementSourceMeters": 0.000004112018985180891
+    },
+    "Blink_Shape_headDepth_high": {
+      "changedVertices": 54,
+      "maxDisplacementSourceMeters": 0.000004112018985180891
+    },
+    "Blink_Shape_cheeks_low": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.0015556405824954914
+    },
+    "Blink_Shape_cheeks_high": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.0018365853278266972
+    },
+    "Blink_Shape_jaw_low": {
+      "changedVertices": 504,
+      "maxDisplacementSourceMeters": 0.0002955403611583462
+    },
+    "Blink_Shape_jaw_high": {
+      "changedVertices": 503,
+      "maxDisplacementSourceMeters": 0.0004641115665435791
+    },
+    "Blink_Shape_muzzle_low": {
+      "changedVertices": 396,
+      "maxDisplacementSourceMeters": 0.0011318681264955392
+    },
+    "Blink_Shape_muzzle_high": {
+      "changedVertices": 377,
+      "maxDisplacementSourceMeters": 0.0010098163670510215
+    },
+    "Blink_Shape_muzzleWidth_low": {
+      "changedVertices": 505,
+      "maxDisplacementSourceMeters": 0.0003045807772985299
+    },
+    "Blink_Shape_muzzleWidth_high": {
+      "changedVertices": 505,
+      "maxDisplacementSourceMeters": 0.0005435454132947981
+    },
+    "Blink_Shape_noseBridge_low": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.0011207782862673516
+    },
+    "Blink_Shape_noseBridge_high": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.0011788824079923441
+    },
+    "Blink_Shape_eyeSize_low": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.0007481473618523271
+    },
+    "Blink_Shape_eyeSize_high": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.0007476418418115322
+    },
+    "Blink_Shape_eyeSpacing_low": {
+      "changedVertices": 501,
+      "maxDisplacementSourceMeters": 0.00007334724097022664
+    },
+    "Blink_Shape_eyeSpacing_high": {
+      "changedVertices": 500,
+      "maxDisplacementSourceMeters": 0.00006831456201236935
+    },
+    "Blink_Shape_eyeTilt_low": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.001744565170584021
+    },
+    "Blink_Shape_eyeTilt_high": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.001987188415473164
+    },
+    "Blink_Shape_earSize_low": {
+      "changedVertices": 11,
+      "maxDisplacementSourceMeters": 0.000004722234172868923
+    },
+    "Blink_Shape_earSize_high": {
+      "changedVertices": 11,
+      "maxDisplacementSourceMeters": 0.00000436896989334175
+    },
+    "Blink_Shape_earTilt_low": {
+      "changedVertices": 14,
+      "maxDisplacementSourceMeters": 0.000003486935398954914
+    },
+    "Blink_Shape_earTilt_high": {
+      "changedVertices": 14,
+      "maxDisplacementSourceMeters": 0.0000034570693969726562
+    },
+    "Blink_Head_round": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.0015814723662548004
+    },
+    "Blink_Head_wedge": {
+      "changedVertices": 506,
+      "maxDisplacementSourceMeters": 0.00104320430381411
+    }
+  },
+  "shapeControlKeys": [
+    "headRound",
+    "headWedge",
+    "headWidth",
+    "headDepth",
+    "cheeks",
+    "jaw",
+    "muzzle",
+    "muzzleWidth",
+    "noseBridge",
+    "eyeSize",
+    "eyeSpacing",
+    "eyeTilt",
+    "earSize",
+    "earTilt"
+  ],
+  "headBounds": {
+    "min": [
+      -0.5219632983207703,
+      2.0300650596618652,
+      1.0835546255111694
+    ],
+    "max": [
+      0.5781088471412659,
+      3,
+      2.1009955406188965
+    ]
+  },
+  "landmarks": {
+    "eyeCenters": [
+      [
+        0.20091961324214935,
+        2.499140739440918,
+        1.7956956624984741
+      ],
+      [
+        -0.1445828527212143,
+        2.4991812705993652,
+        1.795906662940979
+      ]
+    ],
+    "earBases": [
+      [
+        0.3376528024673462,
+        2.5902438163757324,
+        1.535642385482788
+      ],
+      [
+        -0.2903220057487488,
+        2.590263843536377,
+        1.5356110334396362
+      ]
+    ],
+    "muzzleCenter": [
+      0.018785856664180756,
+      2.2289652824401855,
+      1.982757329940796
+    ]
+  },
+  "features": {
+    "blink": true,
+    "fur": false,
+    "originalAnimationRetained": true
+  },
+  "notes": "Original body bind mesh, UVs, material, textures, skin weights and animation preserved; authored grounded standing front pose. Conservative authored local shape keys; no reconstructed head, simulated hair groom, or certified production rig behavior.",
+  "creatorTemplateId": "norwegian-cat-v1",
+  "creatorEyeGeometry": [
+    {
+      "side": "L",
+      "center": [
+        0.20091959947142107,
+        2.499140295489081,
+        1.7956959543557003
+      ],
+      "min": [
+        0.1015050932765007,
+        2.3894495964050293,
+        1.7379631996154785
+      ],
+      "max": [
+        0.30013391375541687,
+        2.5965776443481445,
+        1.8372783660888672
+      ]
+    },
+    {
+      "side": "R",
+      "center": [
+        -0.144582843523601,
+        2.499181099595695,
+        1.795906608680199
+      ],
+      "min": [
+        -0.24398836493492126,
+        2.3899383544921875,
+        1.737963080406189
+      ],
+      "max": [
+        -0.04188577085733414,
+        2.5965776443481445,
+        1.8372714519500732
+      ]
+    }
+  ],
+  "creatorHeadBounds": {
+    "min": [
+      -0.5219632983207703,
+      2.0300650596618652,
+      1.0835546255111694
+    ],
+    "max": [
+      0.5781088471412659,
+      3,
+      2.1009955406188965
+    ]
+  },
+  "creatorLandmarks": {
+    "eyeCenters": [
+      [
+        0.20091961324214935,
+        2.499140739440918,
+        1.7956956624984741
+      ],
+      [
+        -0.1445828527212143,
+        2.4991812705993652,
+        1.795906662940979
+      ]
+    ],
+    "earBases": [
+      [
+        0.3376528024673462,
+        2.5902438163757324,
+        1.535642385482788
+      ],
+      [
+        -0.2903220057487488,
+        2.590263843536377,
+        1.5356110334396362
+      ]
+    ],
+    "muzzleCenter": [
+      0.018785856664180756,
+      2.2289652824401855,
+      1.982757329940796
+    ]
+  },
+  "creatorFeatures": {
+    "blink": true,
+    "fur": false
+  },
+  "creatorDefaultPose": {
+    "name": "standing-front",
+    "sourceFrame": 53,
+    "yawCorrectionDegrees": 6.627173239516416,
+    "rollCorrectionDegrees": -5.859856234209918,
+    "headForward": [
+      0.0006107059252645347,
+      0,
+      0.999999813519119
+    ],
+    "bodyForward": [
+      0,
+      0,
+      1
+    ],
+    "paws": {
+      "PantherLLegPalm": {
+        "minY": 0,
+        "center": [
+          0.339855017723473,
+          0.16878544685665434,
+          -1.0300667759116369
+        ]
+      },
+      "PantherRLegPalm": {
+        "minY": 2.5331974029541016e-7,
+        "center": [
+          -0.3396594617657989,
+          0.1613224007594506,
+          -0.7696190339918355
+        ]
+      },
+      "PantherLLegPalm (1)": {
+        "minY": 1.0058283805847168e-7,
+        "center": [
+          0.31323777990681784,
+          0.10038753376983396,
+          0.83082911894693
+        ]
+      },
+      "PantherRLegPalm (1)": {
+        "minY": 5.960464477539063e-8,
+        "center": [
+          -0.2360966219022483,
+          0.09974473254005244,
+          1.0166586047256148
+        ]
+      }
+    },
+    "groundSpread": 2.5331974029541016e-7
+  },
+  "creatorFaceRefinement": {
+    "method": "Actual upper/lower skin rim closure with geodesic falloff; original globe coordinates unchanged",
+    "blink": true,
+    "generatedSkinLids": [],
+    "rimVertices": [
+      34,
+      34
+    ],
+    "movingSkinVertices": 506,
+    "maxBlinkDisplacement": 0.008067623269387827,
+    "correctives": [
+      "Blink_Shape_headWidth_low",
+      "Blink_Shape_headWidth_high",
+      "Blink_Shape_headDepth_low",
+      "Blink_Shape_headDepth_high",
+      "Blink_Shape_cheeks_low",
+      "Blink_Shape_cheeks_high",
+      "Blink_Shape_jaw_low",
+      "Blink_Shape_jaw_high",
+      "Blink_Shape_muzzle_low",
+      "Blink_Shape_muzzle_high",
+      "Blink_Shape_muzzleWidth_low",
+      "Blink_Shape_muzzleWidth_high",
+      "Blink_Shape_noseBridge_low",
+      "Blink_Shape_noseBridge_high",
+      "Blink_Shape_eyeSize_low",
+      "Blink_Shape_eyeSize_high",
+      "Blink_Shape_eyeSpacing_low",
+      "Blink_Shape_eyeSpacing_high",
+      "Blink_Shape_eyeTilt_low",
+      "Blink_Shape_eyeTilt_high",
+      "Blink_Shape_earSize_low",
+      "Blink_Shape_earSize_high",
+      "Blink_Shape_earTilt_low",
+      "Blink_Shape_earTilt_high",
+      "Blink_Head_round",
+      "Blink_Head_wedge"
+    ],
+    "eyeMaterial": "norwegian_EyeOptics_L/R"
+  },
+  "creatorGroom": {
+    "removedWhiskerCards": true,
+    "removedCardFaces": 1562
+  },
+  "creatorNativeCoat": {
+    "earBones": [
+      "PantherRibcageBone001Bone001Bone001Bone008",
+      "PantherRibcageBone001Bone001Bone001Bone008Bone001",
+      "PantherRibcageBone001Bone001Bone001Bone009",
+      "PantherRibcageBone001Bone001Bone001Bone008Bone001 (1)"
+    ],
+    "method": "Preserve source small ear-weighted components before facial-whisker cleanup",
+    "minimumMeanEarWeight": 0.01,
+    "preservedEarComponents": 342,
+    "preservedEarVertices": 2754,
+    "preservedEarFaces": 2086,
+    "removedWhiskerComponents": 44,
+    "removedWhiskerFaces": 1562
+  },
+  "creatorRuntimeFur": {
+    "implementation": "lib/norwegian-fur.ts",
+    "regions": [
+      "head",
+      "ruff",
+      "body"
+    ],
+    "geometry": "real mesh strands rooted on evaluated skinned and morphed surface",
+    "nativeGlbFur": false
+  },
+  "creatorSourceSha256": "6b027c8d85a79d6c2a06e24939e0faec13b0aee67c84207249018197e4a756f1",
+  "creatorSourceLicense": "User supplied; permission for redistribution/export not verified",
+  "storageOptimization": {
+    "base": "norwegian",
+    "beforeBytes": 26790076,
+    "afterBytes": 26787912,
+    "savedBytes": 2164,
+    "changedAccessors": 134,
+    "verifiedFloatValues": 106422,
+    "originalSha256": "cf9a8e9ecfa8c102d4d93415f6d17ef537feb82deee2d483e4539ab2fb28bac2",
+    "outputSha256": "bda151cace4e581a2314fe5788bbe27c3fe91cbd589d5ac8f3677d36e481b492",
+    "method": "Standard glTF sparse morph accessors; original finite float values exactly preserved; no texture re-encoding",
+    "gzipBytes": 17999494,
+    "gzipSha256": "69559c6f1fc549fb8cc6b034ed0346771f7ff2895a405664a2e75708cf4faf26",
+    "transferReduction": 0.32807402084940407
+  }
+}

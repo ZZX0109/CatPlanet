@@ -1,0 +1,31 @@
+{
+  "format": 1,
+  "current": {
+    "norwegian": "norwegian-9ea85df159dd1e06e06919e9e958d385192a9ba10677b0ea62a7833df59bbc66",
+    "sphynx": "sphynx-de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784"
+  },
+  "assets": {
+    "norwegian-9ea85df159dd1e06e06919e9e958d385192a9ba10677b0ea62a7833df59bbc66": {
+      "base": "norwegian",
+      "url": "/models/room/norwegian-9ea85df159dd1e06e06919e9e958d385192a9ba10677b0ea62a7833df59bbc66.glb",
+      "sha256": "9ea85df159dd1e06e06919e9e958d385192a9ba10677b0ea62a7833df59bbc66",
+      "bytes": 16897868,
+      "templateId": "cat-foundation-v1",
+      "schemaVersion": 4,
+      "facing": 0,
+      "roomSize": 1.5,
+      "distribution": "local-only-unverified"
+    },
+    "sphynx-de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784": {
+      "base": "sphynx",
+      "url": "/models/room/sphynx-de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784.glb",
+      "sha256": "de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784",
+      "bytes": 23528408,
+      "templateId": "cat-foundation-v1",
+      "schemaVersion": 4,
+      "facing": 0,
+      "roomSize": 1.5,
+      "distribution": "local-only-unverified"
+    }
+  }
+}

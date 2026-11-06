@@ -1,0 +1,478 @@
+{
+  "templateId": "sphynx-cat-v1",
+  "baseId": "sphynx",
+  "modelUrl": "/models/creator/sphynx-cat.glb",
+  "source": "assets/source/user-animal-pack-2026-11-04/sphynx/source/Sphynx.blend",
+  "sourceSha256": "636b2d40f9e6950a6c16ebaf60d88ad874cb31a64d49db97e1ae067615c82770",
+  "sourceUnchanged": true,
+  "outputSha256": "c43a533f310aaf69b67bae5dfe017829a8e47a7f61d8934a0679c22961f4d498",
+  "blender": "3.6.23",
+  "boneCount": 85,
+  "sourceVertices": 23687,
+  "neutralMeshUnchanged": true,
+  "shapeTargets": {
+    "Shape_headWidth_low": {
+      "changedVertices": 10831,
+      "maxDisplacementSourceMeters": 0.006628989611381741
+    },
+    "Shape_headWidth_high": {
+      "changedVertices": 10831,
+      "maxDisplacementSourceMeters": 0.006628985886572633
+    },
+    "Shape_headDepth_low": {
+      "changedVertices": 10835,
+      "maxDisplacementSourceMeters": 0.004064503836325155
+    },
+    "Shape_headDepth_high": {
+      "changedVertices": 10835,
+      "maxDisplacementSourceMeters": 0.004064503836325155
+    },
+    "Shape_cheeks_low": {
+      "changedVertices": 9818,
+      "maxDisplacementSourceMeters": 0.002921893449824648
+    },
+    "Shape_cheeks_high": {
+      "changedVertices": 9818,
+      "maxDisplacementSourceMeters": 0.002921893449824648
+    },
+    "Shape_jaw_low": {
+      "changedVertices": 8425,
+      "maxDisplacementSourceMeters": 0.0023798757477497662
+    },
+    "Shape_jaw_high": {
+      "changedVertices": 8425,
+      "maxDisplacementSourceMeters": 0.0023798757477497662
+    },
+    "Shape_muzzle_low": {
+      "changedVertices": 5674,
+      "maxDisplacementSourceMeters": 0.00513771978938367
+    },
+    "Shape_muzzle_high": {
+      "changedVertices": 5674,
+      "maxDisplacementSourceMeters": 0.00513771978938367
+    },
+    "Shape_muzzleWidth_low": {
+      "changedVertices": 5658,
+      "maxDisplacementSourceMeters": 0.0020627780988092996
+    },
+    "Shape_muzzleWidth_high": {
+      "changedVertices": 5658,
+      "maxDisplacementSourceMeters": 0.0020627780988092996
+    },
+    "Shape_noseBridge_low": {
+      "changedVertices": 6156,
+      "maxDisplacementSourceMeters": 0.002548284189737793
+    },
+    "Shape_noseBridge_high": {
+      "changedVertices": 6156,
+      "maxDisplacementSourceMeters": 0.002548284189737793
+    },
+    "Shape_eyeSize_low": {
+      "changedVertices": 2798,
+      "maxDisplacementSourceMeters": 0.001081573110463742
+    },
+    "Shape_eyeSize_high": {
+      "changedVertices": 2798,
+      "maxDisplacementSourceMeters": 0.001081573110463742
+    },
+    "Shape_eyeSpacing_low": {
+      "changedVertices": 2800,
+      "maxDisplacementSourceMeters": 0.002371256214919383
+    },
+    "Shape_eyeSpacing_high": {
+      "changedVertices": 2800,
+      "maxDisplacementSourceMeters": 0.0023712580773238676
+    },
+    "Shape_eyeTilt_low": {
+      "changedVertices": 2800,
+      "maxDisplacementSourceMeters": 0.0011808802107433835
+    },
+    "Shape_eyeTilt_high": {
+      "changedVertices": 2800,
+      "maxDisplacementSourceMeters": 0.0011808825461184537
+    },
+    "Shape_earSize_low": {
+      "changedVertices": 1215,
+      "maxDisplacementSourceMeters": 0.008480724294541228
+    },
+    "Shape_earSize_high": {
+      "changedVertices": 1215,
+      "maxDisplacementSourceMeters": 0.008480724294541228
+    },
+    "Shape_earTilt_low": {
+      "changedVertices": 1215,
+      "maxDisplacementSourceMeters": 0.010555431651491148
+    },
+    "Shape_earTilt_high": {
+      "changedVertices": 1215,
+      "maxDisplacementSourceMeters": 0.010555429183200106
+    },
+    "Head_round": {
+      "changedVertices": 10833,
+      "maxDisplacementSourceMeters": 0.0036463846268154246
+    },
+    "Head_wedge": {
+      "changedVertices": 10835,
+      "maxDisplacementSourceMeters": 0.0027736181504655994
+    },
+    "Blink": {
+      "changedVertices": 571,
+      "maxDisplacementSourceMeters": 0.010913232574467274
+    },
+    "Blink_Shape_headWidth_low": {
+      "changedVertices": 505,
+      "maxDisplacementSourceMeters": 0.0003267136380536477
+    },
+    "Blink_Shape_headWidth_high": {
+      "changedVertices": 505,
+      "maxDisplacementSourceMeters": 0.0003267136380536477
+    },
+    "Blink_Shape_headDepth_low": {
+      "changedVertices": 231,
+      "maxDisplacementSourceMeters": 0.000032854590539713214
+    },
+    "Blink_Shape_headDepth_high": {
+      "changedVertices": 231,
+      "maxDisplacementSourceMeters": 0.000032854590539713214
+    },
+    "Blink_Shape_cheeks_low": {
+      "changedVertices": 9,
+      "maxDisplacementSourceMeters": 4.683247035568929e-7
+    },
+    "Blink_Shape_cheeks_high": {
+      "changedVertices": 9,
+      "maxDisplacementSourceMeters": 4.683247035568929e-7
+    },
+    "Blink_Shape_jaw_low": {
+      "changedVertices": 0,
+      "maxDisplacementSourceMeters": 1.862645149230957e-9
+    },
+    "Blink_Shape_jaw_high": {
+      "changedVertices": 0,
+      "maxDisplacementSourceMeters": 1.862645149230957e-9
+    },
+    "Blink_Shape_muzzle_low": {
+      "changedVertices": 7,
+      "maxDisplacementSourceMeters": 9.477043519515324e-7
+    },
+    "Blink_Shape_muzzle_high": {
+      "changedVertices": 7,
+      "maxDisplacementSourceMeters": 9.477043519515324e-7
+    },
+    "Blink_Shape_muzzleWidth_low": {
+      "changedVertices": 6,
+      "maxDisplacementSourceMeters": 4.0247361247634894e-7
+    },
+    "Blink_Shape_muzzleWidth_high": {
+      "changedVertices": 6,
+      "maxDisplacementSourceMeters": 4.0247361247634894e-7
+    },
+    "Blink_Shape_noseBridge_low": {
+      "changedVertices": 8,
+      "maxDisplacementSourceMeters": 0.00000126250659813154
+    },
+    "Blink_Shape_noseBridge_high": {
+      "changedVertices": 8,
+      "maxDisplacementSourceMeters": 0.00000126250659813154
+    },
+    "Blink_Shape_eyeSize_low": {
+      "changedVertices": 210,
+      "maxDisplacementSourceMeters": 0.00007089011632614814
+    },
+    "Blink_Shape_eyeSize_high": {
+      "changedVertices": 210,
+      "maxDisplacementSourceMeters": 0.00007089011632614814
+    },
+    "Blink_Shape_eyeSpacing_low": {
+      "changedVertices": 492,
+      "maxDisplacementSourceMeters": 0.0003267136380536477
+    },
+    "Blink_Shape_eyeSpacing_high": {
+      "changedVertices": 492,
+      "maxDisplacementSourceMeters": 0.0003267136380536477
+    },
+    "Blink_Shape_eyeTilt_low": {
+      "changedVertices": 306,
+      "maxDisplacementSourceMeters": 0.00010639862350760729
+    },
+    "Blink_Shape_eyeTilt_high": {
+      "changedVertices": 306,
+      "maxDisplacementSourceMeters": 0.00010672046135086618
+    },
+    "Blink_Shape_earSize_low": {
+      "changedVertices": 8,
+      "maxDisplacementSourceMeters": 0.000003340156441283253
+    },
+    "Blink_Shape_earSize_high": {
+      "changedVertices": 8,
+      "maxDisplacementSourceMeters": 0.000003340156441283253
+    },
+    "Blink_Shape_earTilt_low": {
+      "changedVertices": 8,
+      "maxDisplacementSourceMeters": 0.000004544928974665459
+    },
+    "Blink_Shape_earTilt_high": {
+      "changedVertices": 8,
+      "maxDisplacementSourceMeters": 0.000004569415268581608
+    },
+    "Blink_Head_round": {
+      "changedVertices": 403,
+      "maxDisplacementSourceMeters": 0.00017969848247810646
+    },
+    "Blink_Head_wedge": {
+      "changedVertices": 354,
+      "maxDisplacementSourceMeters": 0.00013061841388634391
+    }
+  },
+  "headBounds": {
+    "min": [
+      -0.5172210931777954,
+      1.9877266883850098,
+      1.9191645383834839
+    ],
+    "max": [
+      0.5451804399490356,
+      2.999999761581421,
+      2.796577215194702
+    ]
+  },
+  "landmarks": {
+    "eyeCenters": [
+      [
+        0.21508581936359406,
+        2.374004364013672,
+        2.5592477321624756
+      ],
+      [
+        -0.1871981918811798,
+        2.3740286827087402,
+        2.5590009689331055
+      ]
+    ],
+    "earBases": [
+      [
+        0.2876383364200592,
+        2.4946744441986084,
+        2.1956777572631836
+      ],
+      [
+        -0.2604365944862366,
+        2.4946773052215576,
+        2.1953341960906982
+      ]
+    ],
+    "muzzleCenter": [
+      0.013257425278425217,
+      2.156994104385376,
+      2.7900190353393555
+    ]
+  },
+  "defaultPose": {
+    "name": "standing-front",
+    "sourceFrame": 1,
+    "headForward": [
+      -3.042875960090896e-7,
+      -0.00000983244626695523,
+      0.9999999403953552
+    ],
+    "paws": {
+      "LeftFrontToeSkinJnt": {
+        "minY": 5.140900611877441e-7
+      },
+      "RightFrontToeSkinJnt": {
+        "minY": 7.674098014831543e-7
+      },
+      "LeftBackFootSkinJnt": {
+        "minY": 6.221234798431396e-7
+      },
+      "RightBackFootSkinJnt": {
+        "minY": 5.774199962615967e-7
+      }
+    },
+    "groundSpread": 2.5331974029541016e-7
+  },
+  "creatorEyeGeometry": [
+    {
+      "side": "L",
+      "center": [
+        0.2150858558010106,
+        2.374004870504882,
+        2.559247766561176
+      ],
+      "min": [
+        0.11531554162502289,
+        2.2884228229522705,
+        2.486987829208374
+      ],
+      "max": [
+        0.29495546221733093,
+        2.4695258140563965,
+        2.597846031188965
+      ]
+    },
+    {
+      "side": "R",
+      "center": [
+        -0.18719822290673185,
+        2.3740292959545384,
+        2.5590012844522203
+      ],
+      "min": [
+        -0.26705896854400635,
+        2.288442850112915,
+        2.486743688583374
+      ],
+      "max": [
+        -0.0874289944767952,
+        2.469552993774414,
+        2.5975992679595947
+      ]
+    }
+  ],
+  "creatorFaceRefinement": {
+    "method": "Source-authored eyelid bone animation baked into bind-space skin morph; eyeballs unchanged",
+    "sourceAction": "Take 001_Armature",
+    "sourceBlinkFrame": 168.00000002152944,
+    "lidBones": [
+      "LeftEyeSide1SkinJnt",
+      "LeftEyeSide2SkinJnt",
+      "LeftEyeUpperSkinJnt",
+      "LeftEyeLowerSkinJnt",
+      "RightEyeSide1SkinJnt",
+      "RightEyeSide2SkinJnt",
+      "RightEyeUpperSkinJnt",
+      "RightEyeLowerSkinJnt"
+    ],
+    "blink": true,
+    "generatedSkinLids": [],
+    "rimVertices": [
+      26,
+      26
+    ],
+    "movingSkinVertices": 571,
+    "maxBlinkDisplacement": 0.010913222300268284,
+    "correctives": [
+      "Blink_Shape_headWidth_low",
+      "Blink_Shape_headWidth_high",
+      "Blink_Shape_headDepth_low",
+      "Blink_Shape_headDepth_high",
+      "Blink_Shape_cheeks_low",
+      "Blink_Shape_cheeks_high",
+      "Blink_Shape_jaw_low",
+      "Blink_Shape_jaw_high",
+      "Blink_Shape_muzzle_low",
+      "Blink_Shape_muzzle_high",
+      "Blink_Shape_muzzleWidth_low",
+      "Blink_Shape_muzzleWidth_high",
+      "Blink_Shape_noseBridge_low",
+      "Blink_Shape_noseBridge_high",
+      "Blink_Shape_eyeSize_low",
+      "Blink_Shape_eyeSize_high",
+      "Blink_Shape_eyeSpacing_low",
+      "Blink_Shape_eyeSpacing_high",
+      "Blink_Shape_eyeTilt_low",
+      "Blink_Shape_eyeTilt_high",
+      "Blink_Shape_earSize_low",
+      "Blink_Shape_earSize_high",
+      "Blink_Shape_earTilt_low",
+      "Blink_Shape_earTilt_high",
+      "Blink_Head_round",
+      "Blink_Head_wedge"
+    ],
+    "eyeMaterial": "sphynx_EyeOptics_L/R"
+  },
+  "creatorGroom": {
+    "removedWhiskerCards": false,
+    "removedCardFaces": 0
+  },
+  "creatorTemplateId": "sphynx-cat-v1",
+  "creatorBaseId": "sphynx",
+  "creatorHeadBounds": {
+    "min": [
+      -0.5172210931777954,
+      1.9877266883850098,
+      1.9191645383834839
+    ],
+    "max": [
+      0.5451804399490356,
+      2.999999761581421,
+      2.796577215194702
+    ]
+  },
+  "creatorLandmarks": {
+    "eyeCenters": [
+      [
+        0.21508581936359406,
+        2.374004364013672,
+        2.5592477321624756
+      ],
+      [
+        -0.1871981918811798,
+        2.3740286827087402,
+        2.5590009689331055
+      ]
+    ],
+    "earBases": [
+      [
+        0.2876383364200592,
+        2.4946744441986084,
+        2.1956777572631836
+      ],
+      [
+        -0.2604365944862366,
+        2.4946773052215576,
+        2.1953341960906982
+      ]
+    ],
+    "muzzleCenter": [
+      0.013257425278425217,
+      2.156994104385376,
+      2.7900190353393555
+    ]
+  },
+  "creatorFeatures": {
+    "blink": true,
+    "fur": false
+  },
+  "creatorDefaultPose": {
+    "name": "standing-front",
+    "sourceFrame": 1,
+    "headForward": [
+      -3.042875960090896e-7,
+      -0.00000983244626695523,
+      0.9999999403953552
+    ],
+    "paws": {
+      "LeftFrontToeSkinJnt": {
+        "minY": 5.140900611877441e-7
+      },
+      "RightFrontToeSkinJnt": {
+        "minY": 7.674098014831543e-7
+      },
+      "LeftBackFootSkinJnt": {
+        "minY": 6.221234798431396e-7
+      },
+      "RightBackFootSkinJnt": {
+        "minY": 5.774199962615967e-7
+      }
+    },
+    "groundSpread": 2.5331974029541016e-7
+  },
+  "creatorSourceSha256": "636b2d40f9e6950a6c16ebaf60d88ad874cb31a64d49db97e1ae067615c82770",
+  "creatorSourceLicense": "User supplied; permission for redistribution/export not verified",
+  "creatorSkin": "Original hairless Sphynx albedo, normal-map wrinkles, anatomical mesh and UVs",
+  "storageOptimization": {
+    "base": "sphynx",
+    "beforeBytes": 42320748,
+    "afterBytes": 29570588,
+    "savedBytes": 12750160,
+    "changedAccessors": 135,
+    "verifiedFloatValues": 3751761,
+    "originalSha256": "dd4457c53f1d875ba615946f67bc86bf8accc1e6bafcd42f9aed2bcbe6fe597c",
+    "outputSha256": "c43a533f310aaf69b67bae5dfe017829a8e47a7f61d8934a0679c22961f4d498",
+    "method": "Standard glTF sparse morph accessors; original finite float values exactly preserved; no texture re-encoding",
+    "gzipBytes": 16308702,
+    "gzipSha256": "f011e9869ee04633baf099ba2629c62a762632a360d7dce3bf19e21d72c1dd3d",
+    "transferReduction": 0.44848232304342406
+  }
+}

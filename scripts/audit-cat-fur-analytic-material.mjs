@@ -1,0 +1,51 @@
+/** Optional analytic lighting tangent: CPU shader-hook contracts, not GPU QA. */
+import fs from 'node:fs/promises';
+import vm from 'node:vm';
+import {createHash} from 'node:crypto';
+import {build} from 'esbuild';
+const bundled=await build({stdin:{resolveDir:process.cwd(),loader:'ts',contents:`import*as THREE from'three';import{createCatFurMaterial,configureCatFurMaterial,createCatFurExportMaterial}from'./lib/cat-fur-material';globalThis.__analyticMaterialAudit={THREE,createCatFurMaterial,configureCatFurMaterial,createCatFurExportMaterial};`},bundle:true,write:false,format:'iife',platform:'node'});
+vm.runInThisContext(bundled.outputFiles[0].text);
+const {THREE,createCatFurMaterial:create,configureCatFurMaterial:configure,createCatFurExportMaterial:portable}=globalThis.__analyticMaterialAudit;
+const checks=[];function check(name,pass,details){checks.push({name,pass:!!pass,...(details===undefined?{}:{details})});if(!pass)throw Error(name);}
+const renderer={getCurrentViewport:v=>v.set(0,0,826,521),getRenderTarget:()=>({samples:4})};
+const compile=material=>{const shader={uniforms:{},vertexShader:'#include <common>\n#include <project_vertex>',fragmentShader:'#include <lights_physical_pars_fragment>\n#include <alphatest_fragment>\n#include <opaque_fragment>\n#include <dithering_fragment>'};material.onBeforeCompile(shader,renderer);return shader;};
+const material=create(),shader=compile(material),geometry=new THREE.BufferGeometry();
+check('attribute is optional with an initially disabled explicit uniform',shader.uniforms.catFurHasAnalyticTangent.value===0&&shader.vertexShader.includes('attribute vec3 furTangent;'));
+check('vertex transports tangent with model-view direction map, not a normal matrix',shader.vertexShader.includes('( modelViewMatrix * vec4( furTangent, 0.0 ) ).xyz'));
+const branch=shader.fragmentShader.indexOf('if ( catFurHasAnalyticTangent > 0.5');
+check('fragment prefers normalized analytic derivative before retaining the old fallback',branch>=0&&branch<shader.fragmentShader.indexOf('dFdx( -vViewPosition )')&&shader.fragmentShader.includes('analyticMagnitude > 1e-18')&&shader.fragmentShader.includes('float determinant = ux.x * uy.y - ux.y * uy.x'));
+material.onBeforeRender(renderer,null,null,geometry);
+check('legacy geometry without the attribute always keeps derivative fallback',shader.uniforms.catFurHasAnalyticTangent.value===0);
+const tangentBytes=new Int16Array([0,32767,0]);
+geometry.setAttribute('furTangent',new THREE.Int16BufferAttribute(tangentBytes,3,true));
+material.onBeforeRender(renderer,null,null,geometry);
+check('normalized Int16 xyz analytic directions enable the path',shader.uniforms.catFurHasAnalyticTangent.value===1&&geometry.attributes.furTangent.normalized===true);
+geometry.deleteAttribute('furTangent');material.onBeforeRender(renderer,null,null,geometry);
+check('following absent geometry resets the gate rather than inheriting GL constants',shader.uniforms.catFurHasAnalyticTangent.value===0);
+geometry.setAttribute('furTangent',new THREE.Int16BufferAttribute(new Int16Array([1,2]),2,true));material.onBeforeRender(renderer,null,null,geometry);
+check('malformed non-xyz tangent attributes remain disabled',shader.uniforms.catFurHasAnalyticTangent.value===0);
+geometry.setAttribute('furTangent',new THREE.Int16BufferAttribute(tangentBytes,3,true));material.onBeforeRender(renderer,null,null,geometry);
+const other=create(),otherShader=compile(other);other.onBeforeRender(renderer,null,null,new THREE.BufferGeometry());
+check('two materials do not share optional-attribute uniform state',shader.uniforms.catFurHasAnalyticTangent.value===1&&otherShader.uniforms.catFurHasAnalyticTangent.value===0);
+configure(material,{renderPass:'accumulation',sampling:true});const mrt=compile(material);
+check('MRT pass and independent coverage/depth hooks remain present',mrt.fragmentShader.includes('layout(location = 1) out highp vec4 catFurOpticalDepth;')&&mrt.fragmentShader.includes('catFurFilteredCoverage()')&&mrt.fragmentShader.includes('furOpaqueDepth + 0.000001')&&material.customProgramCacheKey().endsWith('-accumulation'));
+const exported=portable(material);
+check('portable material is a distinct plain PBR resource without runtime tangent hooks',exported!==material&&!exported.customProgramCacheKey().includes('cat-fur-fibre-optics')&&!exported.userData.catFurOptics?.tangent);
+// Quantization and transform reference: direction vectors use the linear map,
+// unlike normal vectors, particularly under a nonuniform model scale.
+const direction=new THREE.Vector3(.2,.4,.8).normalize();
+const encoded=new Int16Array(direction.toArray().map(x=>Math.round(x*32767)));
+const attribute=new THREE.Int16BufferAttribute(encoded,3,true);
+const decoded=new THREE.Vector3(attribute.getX(0),attribute.getY(0),attribute.getZ(0));
+const matrix=new THREE.Matrix4().makeRotationY(.37).scale(new THREE.Vector3(2.5,.4,1.3));
+const linear=new THREE.Matrix3().setFromMatrix4(matrix),normalMatrix=new THREE.Matrix3().getNormalMatrix(matrix);
+const expected=direction.clone().applyMatrix3(linear).normalize();
+const actual=decoded.clone().applyMatrix3(linear).normalize();
+const wrong=decoded.clone().applyMatrix3(normalMatrix).normalize();
+check('Int16 quantization retains direction through nonuniform linear transport',expected.angleTo(actual)<5e-5&&expected.angleTo(wrong)>.1,{angleErrorRadians:expected.angleTo(actual),incorrectNormalTransformErrorRadians:expected.angleTo(wrong)});
+check('material setup does not mutate supplied CPU tangent values',tangentBytes[0]===0&&tangentBytes[1]===32767&&tangentBytes[2]===0);
+material.dispose();other.dispose();exported.dispose();geometry.dispose();
+const out='artifacts/procedural-groom/analytic-tangent';await fs.mkdir(out,{recursive:true});
+const report={checkedAtUTC:new Date().toISOString(),pass:checks.every(c=>c.pass),checks,moduleSHA256:createHash('sha256').update(await fs.readFile('lib/cat-fur-material.ts')).digest('hex'),limits:['CPU shader-hook and direction contracts only; not a GLSL compiler, rendered appearance or GPU test.','No geometry, root, width, albedo, lighting strength or renderer/compositor setting changed.','An analytic lighting derivative smooths per-segment highlights; it does not remove centreline polygon corners or fix chest drape by itself.']};
+await fs.writeFile(out+'/material-cpu-validation.json',JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify({pass:report.pass,checks:checks.length,moduleSHA256:report.moduleSHA256}));

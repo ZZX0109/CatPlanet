@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+
+  container:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build application and maintenance images
+        env:
+          APP_IMAGE: ghcr.io/zzx0109/catplanet
+          MAINTENANCE_IMAGE: ghcr.io/zzx0109/catplanet-maintenance
+        run: |
+          docker build --target runner --label org.opencontainers.image.source="https://github.com/${GITHUB_REPOSITORY}" --tag "$APP_IMAGE:main" --tag "$APP_IMAGE:sha-$GITHUB_SHA" .
+          docker build --target maintenance --label org.opencontainers.image.source="https://github.com/${GITHUB_REPOSITORY}" --tag "$MAINTENANCE_IMAGE:main" --tag "$MAINTENANCE_IMAGE:sha-$GITHUB_SHA" .
+      - name: Publish images to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APP_IMAGE: ghcr.io/zzx0109/catplanet
+          MAINTENANCE_IMAGE: ghcr.io/zzx0109/catplanet-maintenance
+        run: |
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          docker push "$APP_IMAGE:main"
+          docker push "$APP_IMAGE:sha-$GITHUB_SHA"
+          docker push "$MAINTENANCE_IMAGE:main"
+          docker push "$MAINTENANCE_IMAGE:sha-$GITHUB_SHA"
+          docker logout ghcr.io

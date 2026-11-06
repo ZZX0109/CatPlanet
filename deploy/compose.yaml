@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: miaoxing
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set_database_password}
+      POSTGRES_DB: miaoxing
+    volumes: ["database:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U miaoxing"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  migrate:
+    build: { context: .., target: maintenance }
+    env_file: .env.production
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+  app:
+    build: { context: .., target: runner }
+    env_file: .env.production
+    restart: unless-stopped
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    expose: ["3000"]
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+  cleanup:
+    build: { context: .., target: maintenance }
+    env_file: .env.production
+    restart: unless-stopped
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    command: ["sh", "-c", "while true; do npx tsx scripts/cleanup.ts; sleep 3600; done"]
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?set_domain}
+    volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro", "caddy-data:/data", "caddy-config:/config"]
+    depends_on: [app]
+  backup:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      PGHOST: db
+      PGUSER: miaoxing
+      PGPASSWORD: ${POSTGRES_PASSWORD:?set_database_password}
+      PGDATABASE: miaoxing
+    volumes: ["./backup.sh:/backup.sh:ro", "./backups:/backups"]
+    depends_on:
+      db: { condition: service_healthy }
+    command: ["sh", "/backup.sh"]
+volumes:
+  database:
+  caddy-data:
+  caddy-config:

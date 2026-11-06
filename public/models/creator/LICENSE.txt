@@ -1,0 +1,25 @@
+Scope: legacy structural-cat.glb and its Grab3D-derived assets only.
+This notice does not apply to norwegian-cat.glb or sphynx-cat.glb. Their
+user-supplied sources and unverified distribution permissions are recorded
+in norwegian-manifest.json and sphynx-manifest.json.
+
+CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+
+To the extent possible under law, Grab3D has waived all copyright and related or neighboring rights to the
+3D models, textures and images in this package. This work is published from: Germany.
+
+https://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+Origin / AI disclosure
+----------------------
+Method: AI-assisted (contains AI-generated content)
+Base mesh and textures generated with an AI image-to-3D tool (Meshy), then cleaned up, scaled, textured and
+checked in Blender.
+If your platform requires disclosure of AI-generated content (for example Steam), this asset counts as
+AI-assisted.
+
+Web review copy prepared for Miaoxing: reduced to 59,999 triangles and 2048px textures,
+uniformly scaled to height 1.5 and centred on the floor. No rig or morph targets added.
+Source: https://grab3d.com/models/animals/cat/
+
+Structural sculpt derivative: source skull extracted and symmetrized; original baked eye surfaces and textures removed; new physical eye and eyelid meshes; native shape keys authored by project.

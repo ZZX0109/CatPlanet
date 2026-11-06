@@ -1,0 +1,15 @@
+{
+  "source": "assets/source/grab-tabby-cat/cat.glb",
+  "license": "CC0-1.0",
+  "output": "public/models/review/tabby-web.glb",
+  "bytes": 3403812,
+  "source_faces": 765012,
+  "preview_triangles": 59999,
+  "texture_limit": 2048,
+  "blender": "4.5.15 LTS",
+  "limitations": [
+    "Static surface only",
+    "No independent eyes, rig, morph targets or groom",
+    "AI-generated source requires topology and facial reconstruction before animation"
+  ]
+}

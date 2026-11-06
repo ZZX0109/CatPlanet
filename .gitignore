@@ -1,0 +1,38 @@
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+.DS_Store
+.env*
+!.env.example
+.data/
+.tools/
+assets/source/
+*.blend1
+assets/processed/ginger-cat/
+assets/processed/table-face/
+test-results/
+playwright-report/
+deploy/.env.production
+deploy/backups/
+
+# Local data, authoring tools and research outputs are not source releases.
+assets/
+artifacts/
+audit-output/
+maine-coon-lab/
+__pycache__/
+*.pyc
+*.log
+*.blend
+*.blend[0-9]
+*.docx
+.next-*/
+
+# User-supplied models have local-only distribution status. Keep metadata,
+# while supplying approved runtime models separately on a private host.
+public/models/creator/*
+!public/models/creator/LICENSE.txt
+!public/models/creator/*manifest.json
+public/models/room/

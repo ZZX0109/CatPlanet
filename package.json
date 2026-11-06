@@ -1,0 +1,53 @@
+{
+  "name": "miaoxing-cat-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "models:publish-room": "node scripts/publish-room-models.mjs",
+    "models:check-room": "node scripts/publish-room-models.mjs --check",
+    "build:cat": "node scripts/build-norwegian-creator.mjs",
+    "build:cat:legacy": "node scripts/build-cat-creator.mjs",
+    "build:cat:norwegian": "node scripts/build-norwegian-creator.mjs",
+    "build:cat:sphynx": "node scripts/build-sphynx-creator.mjs",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "node --env-file=.env.local scripts/migrate.mjs",
+    "recovery:check": "tsx --env-file=.env.local scripts/rehearse-recovery.mjs",
+    "cleanup": "tsx --env-file=.env.local scripts/cleanup.ts",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "cos-nodejs-sdk-v5": "^3.0.0",
+    "next": "^16.4.4",
+    "nodemailer": "^10.3.1",
+    "pg": "^8.23.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "sharp": "^0.35.5",
+    "tencentcloud-sdk-nodejs-ses": "^4.1.271",
+    "three": "^0.186.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^22.0.0",
+    "@types/nodemailer": "^8.0.2",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.186.0",
+    "prettier": "^3.9.10",
+    "three-mesh-bvh": "0.8.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0"
+  },
+  "overrides": {
+    "tencentcloud-sdk-nodejs-common": {
+      "uuid": "^11.1.1"
+    }
+  }
+}

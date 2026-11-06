@@ -1,0 +1,812 @@
+{
+  "templateId": "structural-cat-v2",
+  "source": "Grab3D CC0 tabby; extracted, symmetrized and rebuilt skull; original material assignments and fake-eye surfaces removed; authored physical eyes, lids, nasal anatomy and native morphs; clean licensed fur colour transferred to new UV textures",
+  "license": "CC0-1.0",
+  "blender": "4.5.15 LTS",
+  "units": "Y-up, +Z forward, eye plane origin",
+  "targets": [
+    "Head_round",
+    "Head_wedge",
+    "Shape_headWidth_low",
+    "Shape_headWidth_high",
+    "Shape_headDepth_low",
+    "Shape_headDepth_high",
+    "Shape_cheeks_low",
+    "Shape_cheeks_high",
+    "Shape_jaw_low",
+    "Shape_jaw_high",
+    "Shape_muzzle_low",
+    "Shape_muzzle_high",
+    "Shape_muzzleWidth_low",
+    "Shape_muzzleWidth_high",
+    "Shape_noseBridge_low",
+    "Shape_noseBridge_high",
+    "Shape_eyeSize_low",
+    "Shape_eyeSize_high",
+    "Shape_eyeSpacing_low",
+    "Shape_eyeSpacing_high",
+    "Shape_eyeTilt_low",
+    "Shape_eyeTilt_high",
+    "Shape_earSize_low",
+    "Shape_earSize_high",
+    "Shape_earTilt_low",
+    "Shape_earTilt_high"
+  ],
+  "blink": "Blink plus Blink_${target} at blink*appearanceWeight",
+  "eyeCenters": [
+    [
+      -0.328,
+      0.006,
+      -0.19
+    ],
+    [
+      0.328,
+      0.006,
+      -0.19
+    ]
+  ],
+  "eyeRadius": 0.235,
+  "nose": [
+    0,
+    -0.43,
+    0.24
+  ],
+  "earCenters": [
+    [
+      -0.66,
+      0.7,
+      -0.35
+    ],
+    [
+      0.66,
+      0.7,
+      -0.35
+    ]
+  ],
+  "bounds": {
+    "min": [
+      -1.35,
+      -1.1,
+      -1.6
+    ],
+    "max": [
+      1.35,
+      1.3,
+      0.7
+    ]
+  },
+  "meshes": [
+    {
+      "name": "Skin_Head",
+      "part": "head",
+      "vertices": 19696,
+      "faces": 19626,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Nose",
+      "part": "muzzle",
+      "vertices": 3442,
+      "faces": 6888,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Nostril_L",
+      "part": "muzzle",
+      "vertices": 385,
+      "faces": 384,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Nostril_R",
+      "part": "muzzle",
+      "vertices": 385,
+      "faces": 384,
+      "shapeKeys": 63
+    },
+    {
+      "name": "MouthLine_L",
+      "part": "muzzle",
+      "vertices": 410,
+      "faces": 400,
+      "shapeKeys": 63
+    },
+    {
+      "name": "MouthLine_R",
+      "part": "muzzle",
+      "vertices": 410,
+      "faces": 400,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Eyeball_L",
+      "part": "eyes",
+      "vertices": 1337,
+      "faces": 1348,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Iris_L",
+      "part": "eyes",
+      "vertices": 4032,
+      "faces": 3840,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Pupil_L",
+      "part": "eyes",
+      "vertices": 769,
+      "faces": 768,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Cornea_L",
+      "part": "eyes",
+      "vertices": 1537,
+      "faces": 1536,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Caruncle_L",
+      "part": "eyes",
+      "vertices": 362,
+      "faces": 384,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Lid_Upper_L",
+      "part": "eyes",
+      "vertices": 442,
+      "faces": 396,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Lid_Lower_L",
+      "part": "eyes",
+      "vertices": 468,
+      "faces": 420,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Eyeball_R",
+      "part": "eyes",
+      "vertices": 1337,
+      "faces": 1348,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Iris_R",
+      "part": "eyes",
+      "vertices": 4032,
+      "faces": 3840,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Pupil_R",
+      "part": "eyes",
+      "vertices": 769,
+      "faces": 768,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Cornea_R",
+      "part": "eyes",
+      "vertices": 1537,
+      "faces": 1536,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Caruncle_R",
+      "part": "eyes",
+      "vertices": 362,
+      "faces": 384,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Lid_Upper_R",
+      "part": "eyes",
+      "vertices": 442,
+      "faces": 396,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Lid_Lower_R",
+      "part": "eyes",
+      "vertices": 468,
+      "faces": 420,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Lid_WetMargin_Upper_L",
+      "part": "eyes",
+      "vertices": 102,
+      "faces": 66,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Lid_WetMargin_Lower_L",
+      "part": "eyes",
+      "vertices": 108,
+      "faces": 70,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Lid_WetMargin_Upper_R",
+      "part": "eyes",
+      "vertices": 102,
+      "faces": 66,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Lid_WetMargin_Lower_R",
+      "part": "eyes",
+      "vertices": 108,
+      "faces": 70,
+      "shapeKeys": 63
+    },
+    {
+      "name": "Fur_ShortCoat",
+      "part": "head",
+      "vertices": 60000,
+      "faces": 24000,
+      "shapeKeys": 31
+    },
+    {
+      "name": "Fur_Lid_Upper_L",
+      "part": "eyes",
+      "vertices": 1300,
+      "faces": 520,
+      "shapeKeys": 22
+    },
+    {
+      "name": "Fur_Lid_Lower_L",
+      "part": "eyes",
+      "vertices": 1300,
+      "faces": 520,
+      "shapeKeys": 23
+    },
+    {
+      "name": "Fur_Lid_Upper_R",
+      "part": "eyes",
+      "vertices": 1300,
+      "faces": 520,
+      "shapeKeys": 23
+    },
+    {
+      "name": "Fur_Lid_Lower_R",
+      "part": "eyes",
+      "vertices": 1300,
+      "faces": 520,
+      "shapeKeys": 23
+    },
+    {
+      "name": "Whisker_L",
+      "part": "muzzle",
+      "vertices": 1050,
+      "faces": 1022,
+      "shapeKeys": 17
+    },
+    {
+      "name": "Whisker_R",
+      "part": "muzzle",
+      "vertices": 1050,
+      "faces": 1022,
+      "shapeKeys": 17
+    }
+  ],
+  "limitations": [
+    "Refined structural cat head with transferred licensed fur, surface-bound short coat and whiskers; not a finished photoreal/game-production asset",
+    "Extracted/remeshed source skull; not hand-retopologized animation topology",
+    "Sparse short coat approximates fur detail; physical-device performance and all parameter combinations require further validation"
+  ],
+  "refinementRound": 8,
+  "correctives": [
+    "Combo_Shape_earSize_low__Shape_earTilt_low",
+    "Combo_Shape_earSize_low__Shape_earTilt_high",
+    "Combo_Shape_earSize_high__Shape_earTilt_low",
+    "Combo_Shape_earSize_high__Shape_earTilt_high",
+    "Combo_Shape_headWidth_low__Shape_cheeks_low"
+  ],
+  "opticalEyes": true,
+  "eyeRefinement": "Light-absorbing pupil; pointed moderate slit; forward curved iris with radial relief; pigmented wet margin and inner wall follow native eyelid/Blink geometry",
+  "irisTexture": "iris-radial.png",
+  "coat": {
+    "donor_triangles": 164153,
+    "safe_donor_triangles": 123744,
+    "baked_feature_vertices_replaced": 21841,
+    "dark_mouth_line_vertices_replaced": 931,
+    "orbital_albedo": {
+      "method": "CC0 neighboring fur extension with directional filament detail",
+      "painted_pixels": 251334,
+      "filament_candidates_per_eye": 5200,
+      "old_eye_mask_unchanged": true
+    },
+    "lid_fur": {
+      "Fur_Lid_Upper_L": {
+        "surface": "Lid_Upper_L",
+        "strands": 260,
+        "vertices": 1300,
+        "nonzero_native_targets": 22,
+        "has_blink": true,
+        "binding": "Root + shortest-arc frame; full-pose Moebius native factors",
+        "max_factor_order": 3,
+        "cached_endpoint_poses": 64
+      },
+      "Fur_Lid_Lower_L": {
+        "surface": "Lid_Lower_L",
+        "strands": 260,
+        "vertices": 1300,
+        "nonzero_native_targets": 23,
+        "has_blink": true,
+        "binding": "Root + shortest-arc frame; full-pose Moebius native factors",
+        "max_factor_order": 3,
+        "cached_endpoint_poses": 64
+      },
+      "Fur_Lid_Upper_R": {
+        "surface": "Lid_Upper_R",
+        "strands": 260,
+        "vertices": 1300,
+        "nonzero_native_targets": 23,
+        "has_blink": true,
+        "binding": "Root + shortest-arc frame; full-pose Moebius native factors",
+        "max_factor_order": 3,
+        "cached_endpoint_poses": 64
+      },
+      "Fur_Lid_Lower_R": {
+        "surface": "Lid_Lower_R",
+        "strands": 260,
+        "vertices": 1300,
+        "nonzero_native_targets": 23,
+        "has_blink": true,
+        "binding": "Root + shortest-arc frame; full-pose Moebius native factors",
+        "max_factor_order": 3,
+        "cached_endpoint_poses": 64
+      }
+    },
+    "baked_objects": [
+      "Skin_Head",
+      "Lid_Upper_L",
+      "Lid_Lower_L",
+      "Lid_Upper_R",
+      "Lid_Lower_R"
+    ],
+    "skin_texture_size": 2048,
+    "hair_strands": 12000,
+    "hair_vertices": 60000,
+    "hair_binding_audit": {
+      "natural": {
+        "max_root_distance_to_bound_surface": 0.0004320383233895369,
+        "max_tip_frame_interpolation_error": 0,
+        "max_hair_vertex_displacement": 0
+      },
+      "round": {
+        "max_root_distance_to_bound_surface": 0.0004340663086547795,
+        "max_tip_frame_interpolation_error": 1.19456415957391e-7,
+        "max_hair_vertex_displacement": 0.20276245444588714
+      },
+      "wedge": {
+        "max_root_distance_to_bound_surface": 0.00043156210376899,
+        "max_tip_frame_interpolation_error": 4.470348358154297e-8,
+        "max_hair_vertex_displacement": 0.27519775799706364
+      },
+      "maximum_head_width": {
+        "max_root_distance_to_bound_surface": 0.00043587397178670333,
+        "max_tip_frame_interpolation_error": 0,
+        "max_hair_vertex_displacement": 0.21052450489529764
+      },
+      "minimum_head_width": {
+        "max_root_distance_to_bound_surface": 0.00043054876224628757,
+        "max_tip_frame_interpolation_error": 5.820766091346741e-11,
+        "max_hair_vertex_displacement": 0.21052509769523203
+      },
+      "round_wide_full_cheeks": {
+        "max_root_distance_to_bound_surface": 0.0007589603619646251,
+        "max_tip_frame_interpolation_error": 0.0047384054707464655,
+        "max_hair_vertex_displacement": 0.44888862524975065
+      },
+      "wedge_narrow_cheeks": {
+        "max_root_distance_to_bound_surface": 0.0007672211012268508,
+        "max_tip_frame_interpolation_error": 0.005076620197772833,
+        "max_hair_vertex_displacement": 0.4562730108338833
+      },
+      "large_outward_ears": {
+        "max_root_distance_to_bound_surface": 0.00047455445419160357,
+        "max_tip_frame_interpolation_error": 0.0017837909955134713,
+        "max_hair_vertex_displacement": 0.2619721034635074
+      }
+    },
+    "whiskers_per_side": 7,
+    "whisker_vertices": 2100,
+    "whisker_binding_audit": {
+      "Whisker_L": {
+        "natural": {
+          "max_skin_root_translation_error": 0,
+          "max_curve_shape_change_after_root_translation": 0,
+          "max_root_displacement": 0
+        },
+        "round": {
+          "max_skin_root_translation_error": 5.8310016402969244e-8,
+          "max_curve_shape_change_after_root_translation": 6.828569911354542e-8,
+          "max_root_displacement": 0.15907889009445716
+        },
+        "wedge": {
+          "max_skin_root_translation_error": 3.414284955677271e-8,
+          "max_curve_shape_change_after_root_translation": 6.664001874625056e-8,
+          "max_root_displacement": 0.1634812475146132
+        },
+        "maximum_head_width": {
+          "max_skin_root_translation_error": 4.842877388000488e-8,
+          "max_curve_shape_change_after_root_translation": 5.960464477539063e-8,
+          "max_root_displacement": 0.0619458746335526
+        },
+        "minimum_head_width": {
+          "max_skin_root_translation_error": 2.9802322387695312e-8,
+          "max_curve_shape_change_after_root_translation": 2.9802322387695312e-8,
+          "max_root_displacement": 0.06194587839216668
+        },
+        "round_wide_muzzle": {
+          "max_skin_root_translation_error": 1.0950072449966572e-7,
+          "max_curve_shape_change_after_root_translation": 1.2644054553268208e-7,
+          "max_root_displacement": 0.316304576102755
+        },
+        "wedge_narrow_cheeks": {
+          "max_skin_root_translation_error": 1.2377834115800373e-7,
+          "max_curve_shape_change_after_root_translation": 1.043081283569336e-7,
+          "max_root_displacement": 0.1951450738940359
+        }
+      },
+      "Whisker_R": {
+        "natural": {
+          "max_skin_root_translation_error": 0,
+          "max_curve_shape_change_after_root_translation": 0,
+          "max_root_displacement": 0
+        },
+        "round": {
+          "max_skin_root_translation_error": 5.6250649953415616e-8,
+          "max_curve_shape_change_after_root_translation": 6.828569911354542e-8,
+          "max_root_displacement": 0.15920592381441095
+        },
+        "wedge": {
+          "max_skin_root_translation_error": 3.414284955677271e-8,
+          "max_curve_shape_change_after_root_translation": 6.664001874625056e-8,
+          "max_root_displacement": 0.16380818558552593
+        },
+        "maximum_head_width": {
+          "max_skin_root_translation_error": 4.470348358154297e-8,
+          "max_curve_shape_change_after_root_translation": 5.960464477539063e-8,
+          "max_root_displacement": 0.060966327004895855
+        },
+        "minimum_head_width": {
+          "max_skin_root_translation_error": 2.2351741790771484e-8,
+          "max_curve_shape_change_after_root_translation": 2.9802322387695312e-8,
+          "max_root_displacement": 0.060966323185891784
+        },
+        "round_wide_muzzle": {
+          "max_skin_root_translation_error": 6.828569911354542e-8,
+          "max_curve_shape_change_after_root_translation": 7.450580596923828e-8,
+          "max_root_displacement": 0.3189102829888888
+        },
+        "wedge_narrow_cheeks": {
+          "max_skin_root_translation_error": 9.335550730035951e-8,
+          "max_curve_shape_change_after_root_translation": 1.0950072449966572e-7,
+          "max_root_displacement": 0.19553934037433698
+        }
+      }
+    },
+    "elapsed_seconds": 32.24,
+    "old_feature_pixels": "Old iris/highlight/nose pictures and dark mouth/philtrum marks replaced by adjacent fur colors before emission bake; white muzzle fur preserved by spatial+pixel-darkness mask",
+    "normal_source": "Fresh low-amplitude material detail; original fake-eye normal atlas excluded"
+  },
+  "coatGeometryPreservation": {
+    "checkedMeshes": 24,
+    "allOriginalCoordinatesUnchanged": true,
+    "sha256": {
+      "Skin_Head": "bf0bb830979ebe1d241f9ba420e8c8813e99d56cf967b302f253f135c5a294a1",
+      "Nose": "2b5c0ddbd59ec7cda0cb133983174ab057aa0a45a412188bdd1477d4d6784b4e",
+      "Nostril_L": "7346e38e5ee56c00914f016810d3028bcf0991c2efbc171a09ed94710835e407",
+      "Nostril_R": "ce21745a8ed5007a6eb237d82f726da0237f636666101280ce9a7733c33ad7e5",
+      "MouthLine_L": "a909d09d548758f7c3811aa18d5a4ac6b6393e4dcfa12e4057fcca878ebd54fb",
+      "MouthLine_R": "54ef796c5c503383f659f23ba36fa865f77e9b1112f491a4f874bbd4fbb145d7",
+      "Eyeball_L": "48c2d8d3a0797a4e4268d55c025368175b27ddc38a4377595123ace774492ee3",
+      "Iris_L": "5b1067f02f8dacec0e639b5916e35daa8f66edcfa3862d3170b0cb9748ad2f34",
+      "Pupil_L": "2643700bfa93960947b6607751a857f69bb92024f77a7f7e6687e738ff0aa361",
+      "Cornea_L": "a219d083cec53bb6ae22be14872936b7fb0d72deacdcfedc2aa4e65cfb0b4e66",
+      "Caruncle_L": "3e7b7701ee674ec23dff438c8194cbe7bdee859e46dd1fcd1ecef1c0a7ecc096",
+      "Lid_Upper_L": "f0ed7900356d0abcf670562299c18efcf48390ff7739502f66bd26f9ac1d0da4",
+      "Lid_Lower_L": "19a340e07aeb4e0c2049afe33739706034808c5e56686f2af435e800656cb31d",
+      "Eyeball_R": "140acb2dc9980daf6b65b127057bec25d09173a6f8dd2c702e62d9355aae0c61",
+      "Iris_R": "7b3968c0d17777b0a635e43bdb2b64d5aaae8f4adc40435b24917540fd7c19cb",
+      "Pupil_R": "f42fb56b88534539b8b2a7a146feeae6f6307c9e2c4b63d7aa7bb33d02e6d3cb",
+      "Cornea_R": "7d2424589c32b2d8cd991397e2f05f804ed1dda4bbc7466366fce2058fe704bb",
+      "Caruncle_R": "5efb5e79cad01c2875459b3f5dc54876f3b848bdf54fc561d23737fb4056c024",
+      "Lid_Upper_R": "7b1dde40e01cd814290de60823a8ef5b1bd4710d989c3baa5ee8a246415d2bf8",
+      "Lid_Lower_R": "f5dcb7ba05f8802bde5cf098351dad4aee9739f8dd2e4b37a793187afa0daed1",
+      "Lid_WetMargin_Upper_L": "617945431d7ae37ec35d02b20c2b2550e3d7f05afa952363255a190d41cec041",
+      "Lid_WetMargin_Lower_L": "4072c8dd863bb644ef5104d9a51e6ea7fcb6c013ddd5628e2971ec5091355a3d",
+      "Lid_WetMargin_Upper_R": "6d37e1402e1d2a3cc84bbd666574dceefd806af0fe7ce7fee4f9070eb7428b20",
+      "Lid_WetMargin_Lower_R": "598046a69160252ec00b2e30d5cf8d4a4be0fb367cd182caec677531084d9fbf"
+    },
+    "method": "Exact float32 coordinate SHA before/after coat authoring within this build; includes mesh and every native shape key"
+  },
+  "addedCoatMeshes": [
+    "Fur_ShortCoat",
+    "Fur_Lid_Upper_L",
+    "Fur_Lid_Lower_L",
+    "Fur_Lid_Upper_R",
+    "Fur_Lid_Lower_R",
+    "Whisker_L",
+    "Whisker_R"
+  ],
+  "addedCoatMeshCount": 7,
+  "orbitalRefinement": {
+    "outerVerticalRadius": 0.135,
+    "apertureVerticalRadius": 0.104,
+    "lowerLidApertureFactor": 0.84,
+    "neutralLowerLidMidlineWidth": 0.047640000000000016,
+    "previousLowerLidMidlineWidth": 0.08444,
+    "method": "Narrowed physical lid annulus; continuous directional fur albedo and native lid-bound short fur follow appearance and Blink targets; independent globe unchanged"
+  },
+  "materialImages": [
+    {
+      "name": "Authored radial iris fibres",
+      "width": 1024,
+      "height": 1024,
+      "packed": true
+    },
+    {
+      "name": "Lid_Lower_L_CoatColorCorrected",
+      "width": 1024,
+      "height": 1024,
+      "packed": true
+    },
+    {
+      "name": "Lid_Lower_L_ShortFurNormal",
+      "width": 1024,
+      "height": 1024,
+      "packed": true
+    },
+    {
+      "name": "Lid_Lower_R_CoatColorCorrected",
+      "width": 1024,
+      "height": 1024,
+      "packed": true
+    },
+    {
+      "name": "Lid_Lower_R_ShortFurNormal",
+      "width": 1024,
+      "height": 1024,
+      "packed": true
+    },
+    {
+      "name": "Lid_Upper_L_CoatColorCorrected",
+      "width": 1024,
+      "height": 1024,
+      "packed": true
+    },
+    {
+      "name": "Lid_Upper_L_ShortFurNormal",
+      "width": 1024,
+      "height": 1024,
+      "packed": true
+    },
+    {
+      "name": "Lid_Upper_R_CoatColorCorrected",
+      "width": 1024,
+      "height": 1024,
+      "packed": true
+    },
+    {
+      "name": "Lid_Upper_R_ShortFurNormal",
+      "width": 1024,
+      "height": 1024,
+      "packed": true
+    },
+    {
+      "name": "Skin_Head_CoatColorCorrected",
+      "width": 2048,
+      "height": 2048,
+      "packed": true
+    },
+    {
+      "name": "Skin_Head_ShortFurNormal",
+      "width": 2048,
+      "height": 2048,
+      "packed": true
+    }
+  ],
+  "nasalRefinement": "Rounded paired upper alae, shallow central notch, lateral nasal volume and beveled physical nostril rims; not a painted triangle",
+  "blenderPositionTargetCount": 63,
+  "webSkinTargetCount": 83,
+  "webNormalOnlyTargetCount": 20,
+  "shapeKeysScope": "meshes[].shapeKeys records Blender authoring POSITION keys; web Skin target count also includes computed NORMAL-only corrections",
+  "normalCorrections": {
+    "script": "scripts/refine-creator-normals.mjs",
+    "mode": "low-ear-cage",
+    "sourceSha256": "04007fc71e56b5879e41610db7cf2d8271ccd9c0888d3ca8be893a3a77229142",
+    "outputSha256": "e361f8c535850b918c03964eabc8ff013dac9df586d706535723bcd590f7735a",
+    "rawModel": "assets/processed/creator-raw/2026-11-04T08-29-48-207Z-e08a367a/blender/structural-cat.glb",
+    "report": "assets/processed/creator-raw/2026-11-04T08-29-48-207Z-e08a367a/normal-report.json",
+    "addedTargets": [
+      "Combo_Shape_headWidth_low__Shape_earTilt_low",
+      "Combo_Shape_headWidth_low__Shape_headDepth_low",
+      "Combo_Shape_headWidth_low__Shape_earSize_low",
+      "Combo_Shape_headDepth_low__Shape_earSize_low",
+      "Combo_Shape_headDepth_low__Shape_earTilt_low",
+      "Combo_Shape_headWidth_low__Shape_headDepth_low__Shape_earSize_low",
+      "Combo_Shape_headWidth_low__Shape_headDepth_low__Shape_earTilt_low",
+      "Combo_Shape_headWidth_low__Shape_earSize_low__Shape_earTilt_low",
+      "Combo_Shape_headDepth_low__Shape_earSize_low__Shape_earTilt_low",
+      "Combo_Shape_headWidth_low__Shape_headDepth_low__Shape_earSize_low__Shape_earTilt_low",
+      "Blink_Combo_Shape_headWidth_low__Shape_earTilt_low",
+      "Blink_Combo_Shape_headWidth_low__Shape_headDepth_low",
+      "Blink_Combo_Shape_headWidth_low__Shape_earSize_low",
+      "Blink_Combo_Shape_headDepth_low__Shape_earSize_low",
+      "Blink_Combo_Shape_headDepth_low__Shape_earTilt_low",
+      "Blink_Combo_Shape_headWidth_low__Shape_headDepth_low__Shape_earSize_low",
+      "Blink_Combo_Shape_headWidth_low__Shape_headDepth_low__Shape_earTilt_low",
+      "Blink_Combo_Shape_headWidth_low__Shape_earSize_low__Shape_earTilt_low",
+      "Blink_Combo_Shape_headDepth_low__Shape_earSize_low__Shape_earTilt_low",
+      "Blink_Combo_Shape_headWidth_low__Shape_headDepth_low__Shape_earSize_low__Shape_earTilt_low"
+    ]
+  },
+  "bytes": 100211072,
+  "sourceSha256": "04007fc71e56b5879e41610db7cf2d8271ccd9c0888d3ca8be893a3a77229142",
+  "outputSha256": "e361f8c535850b918c03964eabc8ff013dac9df586d706535723bcd590f7735a",
+  "webMeshes": [
+    {
+      "name": "Skin_Head",
+      "targetCount": 83,
+      "vertices": 23814
+    },
+    {
+      "name": "Nose",
+      "targetCount": 63,
+      "vertices": 4128
+    },
+    {
+      "name": "Nostril_L",
+      "targetCount": 63,
+      "vertices": 385
+    },
+    {
+      "name": "Nostril_R",
+      "targetCount": 63,
+      "vertices": 385
+    },
+    {
+      "name": "MouthLine_L",
+      "targetCount": 63,
+      "vertices": 451
+    },
+    {
+      "name": "MouthLine_R",
+      "targetCount": 63,
+      "vertices": 451
+    },
+    {
+      "name": "Eyeball_L",
+      "targetCount": 63,
+      "vertices": 1462
+    },
+    {
+      "name": "Iris_L",
+      "targetCount": 63,
+      "vertices": 4032
+    },
+    {
+      "name": "Pupil_L",
+      "targetCount": 63,
+      "vertices": 769
+    },
+    {
+      "name": "Cornea_L",
+      "targetCount": 63,
+      "vertices": 1537
+    },
+    {
+      "name": "Caruncle_L",
+      "targetCount": 63,
+      "vertices": 423
+    },
+    {
+      "name": "Lid_Upper_L",
+      "targetCount": 63,
+      "vertices": 565
+    },
+    {
+      "name": "Lid_Lower_L",
+      "targetCount": 63,
+      "vertices": 577
+    },
+    {
+      "name": "Eyeball_R",
+      "targetCount": 63,
+      "vertices": 1462
+    },
+    {
+      "name": "Iris_R",
+      "targetCount": 63,
+      "vertices": 4032
+    },
+    {
+      "name": "Pupil_R",
+      "targetCount": 63,
+      "vertices": 769
+    },
+    {
+      "name": "Cornea_R",
+      "targetCount": 63,
+      "vertices": 1537
+    },
+    {
+      "name": "Caruncle_R",
+      "targetCount": 63,
+      "vertices": 423
+    },
+    {
+      "name": "Lid_Upper_R",
+      "targetCount": 63,
+      "vertices": 565
+    },
+    {
+      "name": "Lid_Lower_R",
+      "targetCount": 63,
+      "vertices": 577
+    },
+    {
+      "name": "Lid_WetMargin_Upper_L",
+      "targetCount": 63,
+      "vertices": 102
+    },
+    {
+      "name": "Lid_WetMargin_Lower_L",
+      "targetCount": 63,
+      "vertices": 108
+    },
+    {
+      "name": "Lid_WetMargin_Upper_R",
+      "targetCount": 63,
+      "vertices": 102
+    },
+    {
+      "name": "Lid_WetMargin_Lower_R",
+      "targetCount": 63,
+      "vertices": 108
+    },
+    {
+      "name": "Fur_ShortCoat",
+      "targetCount": 31,
+      "vertices": 84000
+    },
+    {
+      "name": "Fur_Lid_Upper_L",
+      "targetCount": 22,
+      "vertices": 1820
+    },
+    {
+      "name": "Fur_Lid_Lower_L",
+      "targetCount": 23,
+      "vertices": 1820
+    },
+    {
+      "name": "Fur_Lid_Upper_R",
+      "targetCount": 23,
+      "vertices": 1820
+    },
+    {
+      "name": "Fur_Lid_Lower_R",
+      "targetCount": 23,
+      "vertices": 1820
+    },
+    {
+      "name": "Whisker_L",
+      "targetCount": 17,
+      "vertices": 1050
+    },
+    {
+      "name": "Whisker_R",
+      "targetCount": 17,
+      "vertices": 1050
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+import { test, expect } from '@playwright/test';
+import { mkdir, readFile } from 'node:fs/promises';
+import sharp from 'sharp';
+
+test('fur controls change real silhouettes and survive undo, save and JSON export', async ({page},info)=>{
+  test.setTimeout(180000);
+  await mkdir('artifacts/cat-fur',{recursive:true});
+  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('/studio/base');
+  await expect(page.locator('[data-creator-ready="true"]')).toBeVisible({timeout:90000});
+  await page.getByRole('button',{name:'毛发',exact:true}).click();
+  const quantity=page.getByRole('slider',{name:'猫毛数量',exact:true});
+  const length=page.getByRole('slider',{name:'猫毛长度',exact:true});
+  const shot=async(name:string)=>{await page.evaluate(()=>scrollTo(0,0));return page.locator('canvas').screenshot({path:`artifacts/cat-fur/${name}.png`});};
+  await length.press('End');await quantity.press('Home');const bald=await shot('zero');
+  await quantity.press('End');await length.press('Home');const short=await shot('dense-short');
+  await length.press('End');const long=await shot('dense-long');
+  await page.getByRole('button',{name:'单独看毛发',exact:true}).click();await shot('fibres-only');
+  await page.getByRole('button',{name:'单独看毛发',exact:true}).click();
+  async function diff(a:Buffer,b:Buffer){const x=await sharp(a).removeAlpha().raw().toBuffer();const y=await sharp(b).removeAlpha().raw().toBuffer();let count=0;for(let i=0;i<x.length;i+=3)if(Math.max(Math.abs(x[i]-y[i]),Math.abs(x[i+1]-y[i+1]),Math.abs(x[i+2]-y[i+2]))>10)count++;return count;}
+  expect(await diff(bald,long)).toBeGreaterThan(2000);
+  expect(await diff(short,long)).toBeGreaterThan(1000);
+  await page.getByRole('button',{name:'撤销',exact:true}).click();await expect(length).toHaveValue('0');
+  await page.getByRole('button',{name:'重做',exact:true}).click();await expect(length).toHaveValue('100');
+  await page.getByRole('button',{name:'保存外观',exact:true}).click();
+  await page.reload();await expect(page.locator('[data-creator-ready="true"]')).toBeVisible({timeout:90000});
+  await page.getByRole('button',{name:'毛发',exact:true}).click();await expect(length).toHaveValue('100');await expect(quantity).toHaveValue('100');
+  await page.getByText('备份与导出',{exact:true}).click();
+  const pending=page.waitForEvent('download');await page.getByRole('button',{name:'导出外观 JSON',exact:true}).click();
+  const download=await pending;await download.saveAs(info.outputPath('fur.json'));
+  const json=JSON.parse(await readFile(info.outputPath('fur.json'),'utf8'));expect(json.shape.furDensity).toBe(100);expect(json.shape.furLength).toBe(100);
+  await quantity.press('Home'); for(let i=0;i<10;i++) await quantity.press('ArrowRight');
+  await page.getByRole('button',{name:'单独看毛发',exact:true}).click();
+  const binaryPending=page.waitForEvent('download');
+  await page.getByRole('button',{name:'导出 3D 模型（GLB）',exact:true}).click();
+  const binary=await binaryPending;await binary.saveAs(info.outputPath('fur.glb'));
+  const bytes=await readFile(info.outputPath('fur.glb'));
+  const gltf=JSON.parse(bytes.subarray(20,20+bytes.readUInt32LE(12)).toString());
+  expect(gltf.nodes.some((n:{name:string})=>n.name==='Skin_Head')).toBe(true);
+  const fur=gltf.nodes.find((n:{name:string})=>n.name==='Fur_ShortCoat');
+  const primitive=gltf.meshes[fur.mesh].primitives[0];
+  expect(gltf.accessors[primitive.indices].count).toBe(1200*9);
+  const legacy={...json,shape:{...json.shape}};delete legacy.shape.furDensity;delete legacy.shape.furLength;
+  await page.getByLabel('导入外观 JSON',{exact:true}).setInputFiles({name:'old.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(legacy))});
+  await expect(quantity).toHaveValue('70');await expect(length).toHaveValue('50');
+  expect(errors).toEqual([]);
+});

@@ -1,0 +1,47 @@
+/** Verified-formula CPU checks and source-derived WORLD-unit radii; no GPU. */
+import fs from 'node:fs/promises';
+import vm from 'node:vm';
+import {createHash} from 'node:crypto';
+import {build} from 'esbuild';
+const output='artifacts/native-curve-radii';await fs.mkdir(output,{recursive:true});
+const compiled=await build({stdin:{resolveDir:process.cwd(),loader:'ts',contents:`import{buildNativeCurveRadii,nativeParticleRadiusAtArcFraction}from'./lib/cat-native-curve-radii';globalThis.__radiusAudit={buildNativeCurveRadii,nativeParticleRadiusAtArcFraction};`},bundle:true,write:false,platform:'node',format:'iife'});vm.runInThisContext(compiled.outputFiles[0].text);
+const{buildNativeCurveRadii:derive,nativeParticleRadiusAtArcFraction:profile}=globalThis.__radiusAudit;
+const hash=x=>createHash('sha256').update(x).digest('hex');const arrayHash=x=>hash(Buffer.from(x.buffer,x.byteOffset,x.byteLength));
+const checks=[];function check(name,pass,details){checks.push({name,pass:!!pass,...(details===undefined?{}:{details})});if(!pass)throw Error(name);}
+const near=(a,b,e=1e-9)=>Math.abs(a-b)<=e;const rejects=fn=>{try{fn();return false;}catch{return true;}};
+const identity=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
+const parameters={rootDiameter:2,tipDiameter:1,diameterScale:.02,shape:0,closeTip:true};
+check('diameter-to-radius conversion is exactly one half',near(profile(parameters,0),.02,1e-15)&&near(profile(parameters,1),.01,1e-15));
+check('linear and curved profiles match independent closed-form values',near(profile(parameters,.25),.0175,1e-15)&&near(profile({...parameters,shape:-.5},.75),.015,1e-15)&&near(profile({...parameters,shape:.5},.5),.0125,1e-15));
+check('RNA extreme shapes preserve finite powf endpoint behaviour',near(profile({...parameters,shape:-1},1),.02,1e-15)&&near(profile({...parameters,shape:1},0),.02,1e-15)&&near(profile({...parameters,shape:1},.5),.01,1e-15));
+const points=new Float32Array([1,0,0,2,0,0,4,0,0,4,0,0,4,0,0]);const counts=new Uint8Array([3]);
+const input={pointsWorld:points,pointCounts:counts,pointCapacity:5,parameters,objectMatrixWorld:identity,worldToOutputScale:1};const before=[arrayHash(points),arrayHash(counts),JSON.stringify(identity),JSON.stringify(parameters)];
+const derived=derive(input);
+check('nonuniform key spacing uses real arc time instead of key index',near(derived.normalizedArc[1],1/3,2e-8)&&near(derived.radii[1],1/60,2e-9)&&derived.objectCurveLengths[0]===3,{time:derived.normalizedArc[1],radius:derived.radii[1]});
+check('Cycles closes the final export slot rather than the retained prefix',near(derived.radii[2],.01)&&near(derived.radii[3],.01)&&derived.radii[4]===0&&derived.diagnostics.closeTipOutsideValidPrefix===1&&!derived.diagnostics.prefixCapApproximation);
+const cap=derive({...input,capPolicy:'retained-prefix-tip'});check('moving a shortened cap is explicit and marked approximate',cap.radii[2]===0&&cap.diagnostics.prefixCapApproximation);
+const open=derive({...input,parameters:{...parameters,closeTip:false}});check('open-tip mode retains nominal tip at the final export slot',near(open.radii[4],.01));
+const scaled=[2,0,0,0,0,2,0,0,0,0,2,0,5,6,7,1];const s=derive({...input,objectMatrixWorld:scaled,worldToOutputScale:3});check('object and output scales each apply once while arc is object-space',near(s.radii[0],.12,1e-8)&&near(s.objectCurveLengths[0],1.5)&&near(s.diagnostics.objectUniformScale,2));
+const nonuniform=identity.slice();nonuniform[5]=2;const shear=identity.slice();shear[4]=.1;
+check('nonuniform scale and shear reject instead of inventing scalar widths',rejects(()=>derive({...input,objectMatrixWorld:nonuniform}))&&rejects(()=>derive({...input,objectMatrixWorld:shear})));
+const badpad=points.slice();badpad[9]=0;const invalid=points.slice();invalid[0]=NaN;
+check('invalid counts padding coordinates parameters and transforms reject',rejects(()=>derive({...input,pointCounts:new Uint8Array([1])}))&&rejects(()=>derive({...input,pointsWorld:badpad}))&&rejects(()=>derive({...input,pointsWorld:invalid}))&&rejects(()=>derive({...input,parameters:{...parameters,shape:2}}))&&rejects(()=>derive({...input,worldToOutputScale:0})));
+check('all input arrays parameters and matrices remain unchanged',before[0]===arrayHash(points)&&before[1]===arrayHash(counts)&&before[2]===JSON.stringify(identity)&&before[3]===JSON.stringify(parameters));
+
+const captureDir='artifacts/native-groom-capture/kitten-original-viewport',metaBytes=await fs.readFile(captureDir+'/meta.json'),meta=JSON.parse(metaBytes),auditPath='artifacts/native-coat-study/existing-native-grooms-audit.json',auditBytes=await fs.readFile(auditPath),audit=JSON.parse(auditBytes);
+const source=audit.reports.find(r=>r.sha256===meta.sourceSha256&&r.sceneFrame===meta.frame);if(!source)throw Error('No matching native-parameter audit for this source/frame.');
+const emitter=source.particleEmitters.find(o=>o.name==='Kitten body');const system=emitter.systems.find(s=>s.name===meta.particleSystem);if(!system)throw Error('Matching source particle system was not found.');const raw=system.settings;
+const pointBytes=await fs.readFile(captureDir+'/'+meta.pointFormat.file),countBytes=await fs.readFile(captureDir+'/'+meta.countFormat.file);
+check('actual capture point/count hashes and source parameters agree',hash(pointBytes)===meta.pointFormat.sha256&&hash(countBytes)===meta.countFormat.sha256&&raw.root_radius===meta.sourceParametersRaw.nativeRootRadiusRaw&&raw.tip_radius===meta.sourceParametersRaw.nativeTipRadiusRaw&&raw.radius_scale===meta.sourceParametersRaw.nativeRadiusScaleRaw&&raw.display_step===meta.sourceParametersRaw.displayStep);
+const actualPoints=new Float32Array(pointBytes.buffer.slice(pointBytes.byteOffset,pointBytes.byteOffset+pointBytes.byteLength)),actualCounts=new Uint8Array(countBytes),matrix=Array.from({length:16},(_,i)=>meta.sourceObjectMatrixWorld[i%4][Math.floor(i/4)]);
+const sourceParameters={rootDiameter:raw.root_radius,tipDiameter:raw.tip_radius,diameterScale:raw.radius_scale,shape:raw.shape,closeTip:raw.use_close_tip};
+const actual=derive({pointsWorld:actualPoints,pointCounts:actualCounts,pointCapacity:17,parameters:sourceParameters,objectMatrixWorld:matrix,worldToOutputScale:1});
+check('all source-derived radii and times are finite nonnegative and monotone',actual.radii.every(x=>Number.isFinite(x)&&x>=0)&&actual.normalizedArc.every((x,i)=>Number.isFinite(x)&&x>=0&&x<=1&&(i%17===0||x>=actual.normalizedArc[i-1])));
+const mm=actual.diagnostics.rootRadiusOutput*meta.sourceUnitScale*1000;
+check('Kitten world root radius is about 27.35 micrometres, not diameter',mm>.027&&mm<.028,{worldRadius:actual.diagnostics.rootRadiusOutput,rootRadiusMm:mm,nominalTipRadiusMm:actual.diagnostics.nominalTipRadiusOutput*meta.sourceUnitScale*1000,objectScale:actual.diagnostics.objectUniformScale});
+const childIds=meta.curves.filter(c=>c.kind==='child').map(c=>c.cacheIndex);const parentIds=meta.curves.filter(c=>c.kind==='parent').map(c=>c.cacheIndex);
+check('raw parents and Cycles selected children remain separately traceable',childIds.length===9470&&parentIds.length===9470,{raw:meta.retainedCurves,parents:parentIds.length,children:childIds.length,cyclesPreviewSelectedKind:raw.child_type!=='NONE'&&childIds.length>0?'child':'parent'});
+const slotRadii=Buffer.from(actual.radii.buffer),arcTimes=Buffer.from(actual.normalizedArc.buffer);
+await fs.writeFile(output+'/kitten-radii-cycles-export-slots.f32',slotRadii);await fs.writeFile(output+'/kitten-normalized-arc.f32',arcTimes);
+const report={checkedAtUTC:new Date().toISOString(),status:'source-derived verified Cycles export formula; not a captured Cycles radius buffer or actual web-groom acceptance',pass:checks.every(x=>x.pass),checks,moduleSHA256:hash(await fs.readFile('lib/cat-native-curve-radii.ts')),provenance:{capture: captureDir+'/meta.json',captureMetaSHA256:hash(metaBytes),sourceSHA256:meta.sourceSha256,parameterAudit:auditPath,parameterAuditSHA256:hash(auditBytes),sourceShape:sourceParameters.shape,sourceCloseTip:sourceParameters.closeTip},files:{radii:{file:'kitten-radii-cycles-export-slots.f32',type:'Float32LE',shape:[meta.retainedCurves,17],bytes:slotRadii.length,sha256:hash(slotRadii)},normalizedArc:{file:'kitten-normalized-arc.f32',type:'Float32LE',shape:[meta.retainedCurves,17],bytes:arcTimes.length,sha256:hash(arcTimes)}},diagnostics:actual.diagnostics,missingForThisExportFormula:[],limits:['Uses complete evaluated native points, not count-only uniform-time approximation.','Object-matrix near-uniform tolerance only absorbs Float32 roundoff; not bitwise Cycles arithmetic.','Raw capture contains both parents and children; Cycles uses children only when present.','Native17 prefix display omits coincident padded cap slots; cap appearance equivalence has not been established.','No source asset, capture metadata, renderer, application or default was modified. No Blender/GPU executed.']};
+await fs.writeFile(output+'/verification.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({pass:report.pass,checks:checks.length,curves:meta.retainedCurves,worldRootRadiusMm:mm,shortened:actual.diagnostics.shortenedCurves,moduleSHA256:report.moduleSHA256}));
