@@ -43,19 +43,19 @@ jobs:
       - name: Build application and maintenance images
         env:
           APP_IMAGE: ghcr.io/zzx0109/catplanet
-          MAINTENANCE_IMAGE: ghcr.io/zzx0109/catplanet-maintenance
+          MAINTENANCE_IMAGE: ghcr.io/zzx0109/catplanet
         run: |
           docker build --target runner --label org.opencontainers.image.source="https://github.com/${GITHUB_REPOSITORY}" --tag "$APP_IMAGE:main" --tag "$APP_IMAGE:sha-$GITHUB_SHA" .
-          docker build --target maintenance --label org.opencontainers.image.source="https://github.com/${GITHUB_REPOSITORY}" --tag "$MAINTENANCE_IMAGE:main" --tag "$MAINTENANCE_IMAGE:sha-$GITHUB_SHA" .
+          docker build --target maintenance --label org.opencontainers.image.source="https://github.com/${GITHUB_REPOSITORY}" --tag "$MAINTENANCE_IMAGE:maintenance-main" --tag "$MAINTENANCE_IMAGE:maintenance-sha-$GITHUB_SHA" .
       - name: Publish images to GitHub Container Registry
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APP_IMAGE: ghcr.io/zzx0109/catplanet
-          MAINTENANCE_IMAGE: ghcr.io/zzx0109/catplanet-maintenance
+          MAINTENANCE_IMAGE: ghcr.io/zzx0109/catplanet
         run: |
           printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
           docker push "$APP_IMAGE:main"
           docker push "$APP_IMAGE:sha-$GITHUB_SHA"
-          docker push "$MAINTENANCE_IMAGE:main"
-          docker push "$MAINTENANCE_IMAGE:sha-$GITHUB_SHA"
+          docker push "$MAINTENANCE_IMAGE:maintenance-main"
+          docker push "$MAINTENANCE_IMAGE:maintenance-sha-$GITHUB_SHA"
           docker logout ghcr.io

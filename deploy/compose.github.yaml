@@ -1,0 +1,9 @@
+# Use alongside compose.yaml after configuring .env.production.
+# CATPLANET_RELEASE=sha-<full commit> pins both images to one source revision.
+services:
+  migrate:
+    image: ghcr.io/zzx0109/catplanet:maintenance-${CATPLANET_RELEASE:-main}
+  app:
+    image: ghcr.io/zzx0109/catplanet:${CATPLANET_RELEASE:-main}
+  cleanup:
+    image: ghcr.io/zzx0109/catplanet:maintenance-${CATPLANET_RELEASE:-main}

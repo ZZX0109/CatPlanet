@@ -5,9 +5,9 @@
 主分支 `main` 保存应用代码、建模脚本、数据库迁移和 Docker 部署配置。推送后，GitHub Actions 使用 Node.js 22 执行依赖安装、类型检查及生产构建，通过后构建并发布两个镜像：
 
 - 应用：`ghcr.io/zzx0109/catplanet:main`
-- 数据迁移/维护：`ghcr.io/zzx0109/catplanet-maintenance:main`
+- 数据迁移/维护：`ghcr.io/zzx0109/catplanet:maintenance-main`
 
-每次同时发布 `sha-完整提交号` 标签，正式环境应固定到经过验证的提交标签。镜像发布成功不代表网站已经上线；GitHub Actions 和 Container Registry 不持续运行应用服务。
+每次同时发布 `sha-完整提交号` 与 `maintenance-sha-完整提交号` 标签，正式环境应固定到经过验证的提交标签。两个构建目标使用同一镜像仓库，继承同一项目的访问权限。镜像发布成功不代表网站已经上线；GitHub Actions 和 Container Registry 不持续运行应用服务。
 
 ## 运行完整应用
 
@@ -23,6 +23,16 @@ cp deploy/.env.example deploy/.env.production
 chmod 600 deploy/.env.production
 docker compose --env-file deploy/.env.production -f deploy/compose.yaml up -d --build
 ```
+
+使用 GitHub 构建的镜像时，在环境文件增加 `CATPLANET_RELEASE=sha-完整提交号`，再叠加 [compose.github.yaml](../deploy/compose.github.yaml)：
+
+```sh
+docker compose --env-file deploy/.env.production -f deploy/compose.yaml -f deploy/compose.github.yaml pull
+docker compose --env-file deploy/.env.production -f deploy/compose.yaml -f deploy/compose.github.yaml run --rm --no-deps migrate
+docker compose --env-file deploy/.env.production -f deploy/compose.yaml -f deploy/compose.github.yaml up -d --no-build
+```
+
+首次迁移应让 Compose 启动数据库依赖，可省略 `--no-deps`；升级时先按部署说明完成备份。若镜像仓库为私有，服务器需先使用有镜像读取权限的 GitHub 凭据登录 `ghcr.io`。
 
 ## 模型和本机文件
 
