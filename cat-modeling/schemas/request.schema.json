@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:miaoxing:cat-modeling:request:1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["requestSchemaVersion", "engine", "parameters"],
+  "properties": {
+    "requestSchemaVersion": { "const": 1 },
+    "engine": { "const": "miaoxing-geometric-cat-v1" },
+    "parameters": {
+      "type": "object", "additionalProperties": false,
+      "required": ["bodyScale", "headScale", "earScale", "tailLength"],
+      "properties": {
+        "bodyScale": { "type": "number", "minimum": 0.5, "maximum": 1.5 },
+        "headScale": { "type": "number", "minimum": 0.5, "maximum": 1.5 },
+        "earScale": { "type": "number", "minimum": 0.5, "maximum": 1.5 },
+        "tailLength": { "type": "number", "minimum": 0.5, "maximum": 1.5 }
+      }
+    }
+  }
+}

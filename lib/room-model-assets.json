@@ -14,7 +14,13 @@
       "schemaVersion": 4,
       "facing": 0,
       "roomSize": 1.5,
-      "distribution": "local-only-unverified"
+      "distribution": "local-only-unverified",
+      "assetRevision": "9ea85df159dd1e06e06919e9e958d385192a9ba10677b0ea62a7833df59bbc66",
+      "topologyVersion": "norwegian-cat-v1",
+      "groomSchemaVersion": 1,
+      "supportedDesignSchemaVersions": [
+        5
+      ]
     },
     "sphynx-de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784": {
       "base": "sphynx",
@@ -25,7 +31,13 @@
       "schemaVersion": 4,
       "facing": 0,
       "roomSize": 1.5,
-      "distribution": "local-only-unverified"
+      "distribution": "local-only-unverified",
+      "assetRevision": "de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784",
+      "topologyVersion": "sphynx-cat-v1",
+      "groomSchemaVersion": 1,
+      "supportedDesignSchemaVersions": [
+        5
+      ]
     }
   }
 }

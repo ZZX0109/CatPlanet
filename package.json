@@ -16,7 +16,12 @@
     "db:migrate": "node --env-file=.env.local scripts/migrate.mjs",
     "recovery:check": "tsx --env-file=.env.local scripts/rehearse-recovery.mjs",
     "cleanup": "tsx --env-file=.env.local scripts/cleanup.ts",
-    "test": "playwright test"
+    "test": "playwright test",
+    "cat-modeling": "node cat-modeling/cli.mjs",
+    "test:cat-modeling": "node --import tsx tests/cat-model-contract.node.ts && node --import tsx tests/cat-visual-contract.node.ts && node --test cat-modeling/tests/*.test.mjs",
+    "models:visual:plan": "node --import tsx scripts/validate-cat-visuals.ts --dry-run",
+    "models:visual": "node --import tsx scripts/validate-cat-visuals.ts",
+    "test:cat-modeling:browser": "playwright test --config tests/cat-foundation.playwright.config.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

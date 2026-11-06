@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:miaoxing:cat-modeling:manifest:1",
+  "type": "object", "additionalProperties": false,
+  "required": ["manifestSchemaVersion", "taskId", "engine", "designSchemaVersion", "topologyVersion", "groomSchemaVersion", "assetRevision", "files", "bodySurface", "capabilities", "license", "usage", "productionCompatible"],
+  "properties": {
+    "manifestSchemaVersion": { "const": 1 },
+    "taskId": { "type": "string", "pattern": "^task-[0-9a-f]{24}$" },
+    "engine": { "const": "miaoxing-geometric-cat-v1" },
+    "designSchemaVersion": { "const": 1 },
+    "topologyVersion": { "const": "miaoxing-geometric-cat-v1" },
+    "groomSchemaVersion": { "const": 1 },
+    "assetRevision": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "files": { "type": "object", "additionalProperties": false, "required": ["request.json", "appearance.json", "model.glb", "groom.json"], "properties": { "request.json": { "$ref": "#/$defs/file" }, "appearance.json": { "$ref": "#/$defs/file" }, "model.glb": { "$ref": "#/$defs/file" }, "groom.json": { "$ref": "#/$defs/file" } } },
+    "bodySurface": { "$ref": "groom.schema.json#/properties/bodySurface" },
+    "capabilities": { "type": "object", "additionalProperties": false, "required": ["morphTargets", "bones", "animationSemantics", "faceControls", "groomRepresentation"], "properties": { "morphTargets": { "type": "array", "maxItems": 0 }, "bones": { "type": "array", "maxItems": 0 }, "animationSemantics": { "type": "object", "maxProperties": 0 }, "faceControls": { "type": "array", "maxItems": 0 }, "groomRepresentation": { "const": "none" } } },
+    "license": { "type": "object", "additionalProperties": false, "required": ["status", "identifier", "source", "trainingAllowed", "publicDistributionAllowed"], "properties": { "status": { "const": "verified" }, "identifier": { "const": "CC0-1.0" }, "source": { "const": "repository-authored-geometric-fixture" }, "trainingAllowed": { "const": false }, "publicDistributionAllowed": { "const": true } } },
+    "usage": { "const": "pipeline-test-fixture" },
+    "productionCompatible": { "const": false }
+  },
+  "$defs": { "file": { "type": "object", "additionalProperties": false, "required": ["sha256", "bytes"], "properties": { "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }, "bytes": { "type": "integer", "minimum": 1 } } } }
+}

@@ -250,6 +250,8 @@ for eye_index,eye_ids in enumerate(face_report['eyeIds']):
 extras={'creatorEyeGeometry':eye_geometry,'creatorFaceRefinement':{k:v for k,v in face_report.items()if k!='eyeIds'},'creatorGroom':{'removedWhiskerCards':False,'removedCardFaces':0},'creatorTemplateId':'sphynx-cat-v1','creatorBaseId':'sphynx','creatorHeadBounds':bounds,'creatorLandmarks':landmarks,'creatorFeatures':{'blink':True,'fur':False},'creatorDefaultPose':pose,'creatorSourceSha256':source_hash,'creatorSourceLicense':'User supplied; permission for redistribution/export not verified','creatorSkin':'Original hairless Sphynx albedo, normal-map wrinkles, anatomical mesh and UVs'}
 for key,value in extras.items():scene[key]=value;root[key]=value
 mesh['creatorPart']='head'
+mesh['bodySurface']=True
+mesh['role']='bodySurface'
 for key in mesh.data.shape_keys.key_blocks:key.value=0
 BLEND.parent.mkdir(parents=True,exist_ok=True)
 bpy.context.preferences.filepaths.save_version=0

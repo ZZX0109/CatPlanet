@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Box3, Group, SkinnedMesh, Vector3 } from "three";
+import { Box3, Group, Vector3 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   applyCreatorDesign,
@@ -60,9 +60,7 @@ export default function RoomCreatorCat({
           return;
         }
         if (base !== "sphynx") {
-          const surface = owned.meshes.find((m) => m instanceof SkinnedMesh);
-          if (!(surface instanceof SkinnedMesh))
-            throw new Error("缺少猫咪表面");
+          const surface = owned.bodySurface;
           const fur = await createNorwegianFur(owned.scene, surface, {
             includeGroom: design.coatMode === "groom",
           });

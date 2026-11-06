@@ -1,0 +1,25 @@
+{
+  "scenarioVersion": 1,
+  "id": "cat-neutral-review-v1",
+  "width": 768,
+  "height": 768,
+  "normalizedHeight": 2,
+  "camera": { "type": "orthographic", "span": 3.4, "near": 0.01, "far": 100, "target": [0, 1, 0] },
+  "views": {
+    "front": [0, 1, 7],
+    "three": [5, 2.3, 6],
+    "side": [7, 1, 0]
+  },
+  "background": "#dedad2",
+  "ambient": 0.15,
+  "lights": [
+    { "position": [-3, 4, 5], "color": "#fff9f0", "intensity": 1.8 },
+    { "position": [4, 1, 2], "color": "#e6efff", "intensity": 0.45 },
+    { "position": [0, 3, -4], "color": "#fff8e9", "intensity": 1.2 }
+  ],
+  "pose": "stand",
+  "blink": 0,
+  "animationTime": 0,
+  "colorManagement": "sRGB output; no tone mapping; exposure 1",
+  "groom": "web generated geometry; Blender native curves require separate evidence, never assumed GLB portable"
+}

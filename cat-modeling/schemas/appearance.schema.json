@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:miaoxing:cat-modeling:fixture-appearance:1",
+  "type": "object", "additionalProperties": false,
+  "required": ["format", "designSchemaVersion", "topologyVersion", "groomSchemaVersion", "templateId", "parameters"],
+  "properties": {
+    "format": { "const": "miaoxing.fixture.appearance" },
+    "designSchemaVersion": { "const": 1 },
+    "topologyVersion": { "const": "miaoxing-geometric-cat-v1" },
+    "groomSchemaVersion": { "const": 1 },
+    "templateId": { "const": "miaoxing-geometric-cat-v1" },
+    "parameters": { "$ref": "request.schema.json#/properties/parameters" }
+  }
+}

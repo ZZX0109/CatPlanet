@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { SkinnedMesh } from "three";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
@@ -139,14 +138,7 @@ export default function CatCreator() {
         );
         owned = ownCreatorModel(gltf.scene, gltf.animations, baseId);
         if (baseId !== "sphynx") {
-          const surface = owned.meshes
-            .filter((mesh) => mesh instanceof SkinnedMesh)
-            .sort(
-              (a, b) =>
-                b.geometry.attributes.position.count -
-                a.geometry.attributes.position.count,
-            )[0];
-          if (!surface) throw new Error("Missing cat surface");
+          const surface = owned.bodySurface;
           const fur = await createNorwegianFur(owned.scene, surface, {
             includeGroom: showingGroom,
           });

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:miaoxing:cat-modeling:groom:1",
+  "type": "object", "additionalProperties": false,
+  "required": ["groomSchemaVersion", "bodySurface", "representation", "guides", "notes"],
+  "properties": {
+    "groomSchemaVersion": { "const": 1 },
+    "bodySurface": { "type": "object", "additionalProperties": false, "required": ["node"], "properties": { "node": { "const": "bodySurface" } } },
+    "representation": { "const": "none" },
+    "guides": { "type": "array", "maxItems": 0 },
+    "notes": { "type": "string" }
+  }
+}

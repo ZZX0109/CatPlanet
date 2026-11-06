@@ -1,0 +1,5 @@
+{
+  "requestSchemaVersion": 1,
+  "engine": "miaoxing-geometric-cat-v1",
+  "parameters": { "bodyScale": 1, "headScale": 1, "earScale": 1, "tailLength": 1 }
+}

@@ -25,7 +25,10 @@ test("refresh restores photo, appearance and unfinished memory; discard actually
   await guest(page);
   const photo = await sharp({ create: { width: 20, height: 20, channels: 3, background: "#c08060" } }).png().toBuffer();
   await page.locator('input[accept="image/jpeg,image/png,image/webp"]').setInputFiles({ name: "draft.png", mimeType: "image/png", buffer: photo });
-  await page.getByLabel("导入造型室外观 JSON").setInputFiles({ name: "cat.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(defaultCreatorDesign)) });
+  // This regression checks a short-coat draft explicitly; the studio's current
+  // default is long-coat and must not silently determine this test fixture.
+  const appearance = { ...defaultCreatorDesign, coatType: "short" as const };
+  await page.getByLabel("导入造型室外观 JSON").setInputFiles({ name: "cat.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(appearance)) });
   await page.getByRole("button", { name: "进入它的小房间", exact: true }).click();
   await page.getByRole("button", { name: "回忆 · 0", exact: true }).click();
   await page.getByLabel("记下一段回忆", { exact: true }).fill("还没有写完的那个午后");

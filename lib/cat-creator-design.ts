@@ -224,7 +224,9 @@ export const creatorControls = [
 
 export type CreatorKey = (typeof creatorControls)[number]["key"];
 export type CreatorDesign = {
+  /** Legacy wire alias retained for old room records and existing clients. */
   schemaVersion: 5;
+  designSchemaVersion?: 5;
   templateId: "cat-foundation-v1";
   coatType: CreatorCoatType;
   coatMode: CreatorCoatMode;
@@ -233,6 +235,7 @@ export type CreatorDesign = {
 
 export const defaultCreatorDesign: CreatorDesign = {
   schemaVersion: 5,
+  designSchemaVersion: 5,
   templateId: "cat-foundation-v1",
   coatType: "long",
   coatMode: "groom",
@@ -312,6 +315,16 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 /** This template has different topology and semantics from both older editors. */
 export function parseCreatorDesign(input: unknown): CreatorDesign {
+  // Accept the explicit name on new files while preserving legacy v3/v4/v5
+  // records. When both aliases exist they must agree; do not silently repair a
+  // contradictory contract. Shape migration below remains the single authority.
+  if (isRecord(input) && Object.hasOwn(input, "designSchemaVersion")) {
+    if (input.designSchemaVersion !== 5 ||
+        (input.schemaVersion !== undefined && input.schemaVersion !== 5))
+      throw new Error("外观参数版本标识冲突或不受支持。");
+    const { designSchemaVersion: _version, ...legacy } = input;
+    input = { ...legacy, schemaVersion: 5 };
+  }
   const previousVersion =
     isRecord(input) &&
     input.schemaVersion === 3 &&
@@ -320,7 +333,7 @@ export function parseCreatorDesign(input: unknown): CreatorDesign {
     isRecord(input) &&
     (input.schemaVersion === 4 || input.schemaVersion === 5) &&
     input.templateId === "cat-foundation-v1";
-  const currentVersion = foundationVersion && input.schemaVersion === 5;
+  const currentVersion = foundationVersion && isRecord(input) && input.schemaVersion === 5;
   const expectedKeys = previousVersion
     ? ["schemaVersion", "templateId", "shape"]
     : [
@@ -372,6 +385,7 @@ export function parseCreatorDesign(input: unknown): CreatorDesign {
   }
   return {
     schemaVersion: 5,
+    designSchemaVersion: 5,
     templateId: "cat-foundation-v1",
     coatType: previousVersion ? "long" : (input.coatType as CreatorCoatType),
     // Restore the complete coat for v3/v4 records without changing their
@@ -386,6 +400,7 @@ export function parseCreatorDesign(input: unknown): CreatorDesign {
 export function serializeCreatorDesign(design: CreatorDesign): string {
   return JSON.stringify({
     schemaVersion: design.schemaVersion,
+    designSchemaVersion: design.designSchemaVersion ?? design.schemaVersion,
     templateId: design.templateId,
     coatType: design.coatType,
     coatMode: design.coatMode ?? "groom",

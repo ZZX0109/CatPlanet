@@ -295,6 +295,7 @@ def author_face_refinement(mesh, base, basis, origin, eye_ids, base_id, head_wei
     # Assign original UV-mapped globe polygons their own material. Clearcoat
     # gives controlled wet reflections without turning the black pupil metallic.
     original=mesh.data.materials[0]
+    original['creatorRole']='body-surface'
     optical=original.copy();optical.name=base_id+'_EyeOptics'
     bsdf=next((node for node in optical.node_tree.nodes if node.type=='BSDF_PRINCIPLED'),None)
     if bsdf:

@@ -4,6 +4,7 @@ import type { NorwegianFur } from "./norwegian-fur";
 import type { CatCoatType } from "./cat-coat-profiles";
 import { createCreatorMotion, type CreatorMotion } from "./cat-creator-motion";
 import { createCatNativeCoatTuner } from "./cat-native-coat";
+import { inspectCatAssetCapabilities, resolveCatBodySurface } from "./cat-asset-capabilities";
 import {
   creatorControls,
   parseCreatorDesign,
@@ -21,6 +22,8 @@ export type CreatorLandmarks = {
 
 export type CreatorModel = {
   baseId: "norwegian" | "sphynx";
+  capabilities: ReturnType<typeof inspectCatAssetCapabilities>;
+  bodySurface: THREE.SkinnedMesh;
   scene: THREE.Group;
   meshes: THREE.Mesh[];
   materials: Map<THREE.Mesh, THREE.Material | THREE.Material[]>;
@@ -130,6 +133,12 @@ export function ownCreatorModel(
         : "norwegian";
     if (expectedBase && baseId !== expectedBase)
       throw new Error("基础猫与当前选择不匹配，请重新加载。");
+    const capabilities = inspectCatAssetCapabilities(scene, animations, baseId);
+    const bodySurface = resolveCatBodySurface(scene, baseId);
+    if (capabilities.missingSemanticBones.length || capabilities.missingBoundSemanticBones.length)
+      throw new Error(`猫咪骨骼语义或表面绑定缺失：${[...new Set([
+        ...capabilities.missingSemanticBones, ...capabilities.missingBoundSemanticBones,
+      ])].join(", ")}`);
     coatTuner = createCatNativeCoatTuner(sourceMaterials);
     const rawBounds = data.creatorHeadBounds as
       { min?: unknown; max?: unknown } | undefined;
@@ -201,6 +210,8 @@ export function ownCreatorModel(
       }
     resource = {
       baseId,
+      capabilities,
+      bodySurface,
       scene,
       meshes,
       materials,

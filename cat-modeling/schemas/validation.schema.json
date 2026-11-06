@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:miaoxing:cat-modeling:validation:1",
+  "type": "object", "additionalProperties": false,
+  "required": ["validationSchemaVersion", "taskId", "valid", "errors", "warnings", "checks", "assetRevision", "dryRun"],
+  "properties": {
+    "validationSchemaVersion": { "const": 1 },
+    "taskId": { "type": "string", "pattern": "^task-[0-9a-f]{24}$" },
+    "valid": { "type": "boolean" },
+    "errors": { "type": "array", "items": { "type": "string" } },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "checks": { "type": "object", "additionalProperties": false, "required": ["request", "deterministicArtifacts", "glbStructure", "licenseVerified"], "properties": { "request": { "type": "boolean" }, "deterministicArtifacts": { "type": "boolean" }, "glbStructure": { "type": "boolean" }, "licenseVerified": { "type": "boolean" } } },
+    "assetRevision": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+    "dryRun": { "type": "boolean" }
+  }
+}

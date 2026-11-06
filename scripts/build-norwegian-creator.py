@@ -364,6 +364,8 @@ for key, value in extras.items():
     scene[key] = value
     root[key] = value
 mesh['creatorPart'] = 'head'
+mesh['bodySurface'] = True
+mesh['role'] = 'bodySurface'
 for key in mesh.data.shape_keys.key_blocks:
     key.value = 0
 

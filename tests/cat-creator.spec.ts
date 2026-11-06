@@ -1185,7 +1185,7 @@ test("previous v4 source storage and import restore the complete coat while v5 k
   const saved = JSON.parse(
     (await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY))!,
   );
-  expect(saved).toEqual({ ...previous, schemaVersion: 5, coatMode: "groom" });
+  expect(saved).toEqual({ ...previous, schemaVersion: 5, designSchemaVersion: 5, coatMode: "groom" });
   await page.reload();
   await ready(page);
   await page.getByRole("button", { name: "毛发", exact: true }).click();
