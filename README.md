@@ -10,6 +10,24 @@
 
 房间现支持导入造型室导出的外观 JSON，随宠物档案保存，并在登录后恢复定制猫。使用当前造型室参数校验器，兼容旧 v3 外观迁移。定制猫暂以站姿显示并支持轻触转身，走路与趴卧仍待建模侧交付并验收；基础猫原有动作保留。此流程不依赖造型室本机存储，换设备登录会读取账号中的外观快照。
 
+### 猫咪建模云端工程入口
+
+新增 [统一 CLI 与协议](./cat-modeling/README.md)、[机器可读任务契约](./cat-modeling/contracts/) 和 [Codex Skill](./.agents/skills/miaoxing-cat-model/SKILL.md)。现有造型室保留；外观设计、资产哈希/拓扑、groom、渲染器兼容和实际能力分别验证。旧 v3/v4 外观经原解析器迁移至 v5，旧资产 ID/哈希和历史存档保留。
+
+云端支持契约、GLB 静态检查、授权元数据检查、独立任务和本地执行器交接。**未配置生产模型时，infer 明确返回不可用**；原创几何 fixture 只供公开回归，不能称为照片转三维、猫专用 AI 或真实母模验收。A 形态、B 毛色花纹、C 毛流/长度/密度的预测模块采用独立版本接口，当前没有权重、合法训练集或 GPU 服务。训练和 GPU 推理不运行在 Next.js 请求进程。
+
+```sh
+npm ci
+npm run test:cat-modeling
+npm run test:cat-modeling:browser
+npm run typecheck
+npm run build
+```
+
+浏览器测试需要 Playwright Chromium：可运行 `npx playwright install chromium`，或通过 `CHROMIUM_PATH` 指定现有浏览器。GitHub Actions 的公开测试不需要私有 Blender 文件、账号数据库或密钥。它们验证真实 GLB 解码和合成数据恢复，不能替代私有 Norwegian/Sphynx 的骨架、毛发、动作和四阶段视觉验收；缺少真实资产时这些项目仍为 blocked/unrun。
+
+需要 Blender 的制作/渲染通过任务协议交给获准的本地执行器；预览计划不代表已生成图片。生产发布当前未实现，任何正式激活都必须先取得真实验收证据、授权和用户明确确认。不会自动覆盖当前模型、上传私人照片或修改生产数据库。[本轮工程与本地验收边界](./docs/CAT-MODELING-CLOUD-REFACTOR.md)。
+
 - [模型接入协议与建模交付边界](./docs/MODEL-INTEGRATION.md)
 - [六项开发目标核对与剩余工作](./docs/DEVELOPMENT-STATUS.md)
 - 已增加本机草稿恢复（含照片、未完成回忆和外观）、账号隔离以及房间视角按钮。房间模型现使用独立版本存档与文件校验；后续待办：真实云部署与设备验收、记忆聊天。已增加[离线生活日记](./docs/PET-LIFE.md)，活动在再次打开日记时补记。当前按用户要求优先本地体验。

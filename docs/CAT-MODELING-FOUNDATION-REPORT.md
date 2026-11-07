@@ -2,6 +2,8 @@
 
 记录日期：2026-11-06（Asia/Shanghai）。本报告区分仓库中可重现的元数据检查、历史文档的结论，以及本轮尚未执行的视觉验收。实现与测试结果以本轮实际命令和任务报告为准。
 
+本页保留第一轮历史快照。2026-11-07 云端重构已将生产入口改为默认不可用，旧测试引擎必须显式选择 `--engine fixture`；当前命令以 `cat-modeling/README.md` 和 `CAT-MODELING-CLOUD-REFACTOR.md` 为准，不直接复制本页历史 CLI 示例。
+
 ## 本轮实现与交付状态
 
 已完成可独立验证的基础架构修复：房间资产原 `schemaVersion:4` 与 design v5 直接判等的问题已移除；资产哈希、URL、原二进制和 `current` 指针保持不变。现在独立验证 design、拓扑和 groom 契约，并按二进制 SHA 校验 asset revision。原 v3/v4/v5 数据经现有迁移路径处理，保留脸型与毛量/毛长；v3/v4 恢复完整被毛、v5 保留显式 source 的语义沿用原实现。

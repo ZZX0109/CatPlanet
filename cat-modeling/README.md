@@ -1,44 +1,70 @@
-# 喵星猫模型任务接口（基础架构第一轮）
+# 喵星猫模型接口与隔离 CLI
 
-本 CLI 只运行仓库原创几何猫测试引擎 `miaoxing-geometric-cat-v1`。它是带身体、头、耳、四肢和尾部的合法 GLB 2.0 测试模型，使用固定拓扑和确定性尺寸；没有 AI 权重、训练、照片重建、第三方推理服务或生产模型替换。它不代表写实母模，也不能证明原造型室与房间视觉一致。
+当前版本提供严格协议、现有模型的本地结构检查、文件校验和本地 Blender 任务交接。**没有可调用的生产猫模型、已注册权重、训练、外部推理服务或生产发布后端**。默认 `infer` 返回 `MODEL_UNAVAILABLE`，不会用测试几何冒充 AI 输出；`publish` 返回 `PRODUCTION_PUBLISH_UNAVAILABLE`。Next.js 不执行这些离线操作。
+
+## 生产协议
+
+[contracts/README.md](contracts/README.md) 定义请求、appearance、groom、features、manifest、validation，以及 A 形态、B 毛色纹理、C groom 三个独立的接口版本。`contracts/index.mjs` 的严格 Zod 对象用于运行时校验；同目录 `*.schema.json` 是生成的跨语言 JSON Schema。重心坐标和、头型混合和、重复特征／参考、操作条件、拓扑绑定及 CPU/GPU 预算关系还由运行时语义校验检查。未知字段不会默默接受。
 
 ```sh
-node cat-modeling/cli.mjs infer --request cat-modeling/examples/request.json --dry-run
-node cat-modeling/cli.mjs infer --request cat-modeling/examples/request.json
-# 以下 task ID 来自上述响应。相同输入得到相同 ID；已存在的任务不会覆盖。
-node cat-modeling/cli.mjs validate --task task-7f6786d86bd7aaeee5841b70 --dry-run
-node cat-modeling/cli.mjs preview --task task-7f6786d86bd7aaeee5841b70 --dry-run
-node cat-modeling/cli.mjs preview --task task-7f6786d86bd7aaeee5841b70
-node cat-modeling/cli.mjs publish --task task-7f6786d86bd7aaeee5841b70 --dry-run
+# 仅查看真实可用能力；无文件生成或后台任务
+node cat-modeling/cli.mjs inspect
+# 原模型的受限本地元数据检查，许可、语义和视觉仍未验收
+node cat-modeling/cli.mjs inspect --file /path/to/approved/model.glb
+# 仅检查协议结构；明确不代替私有模型文件验收
+node cat-modeling/cli.mjs validate --contract request \
+  --file cat-modeling/contracts/examples/request.v1.json --dry-run
+# 生产模型目前不可用；exit 6，不生成任何代替模型
+node cat-modeling/cli.mjs infer \
+  --request cat-modeling/contracts/examples/request.v1.json --dry-run
+# 完整交付包检查：需要下面列出的全部文件、正确摘要与资源预算
+node cat-modeling/cli.mjs validate --request /path/to/job/request.json \
+  --input-root /path/to/authorized/package --dry-run
+# 本地源资产检查与 Blender 任务描述；不会启动 Blender
+node cat-modeling/cli.mjs preview --request /path/to/job/request.json \
+  --input-root /path/to/authorized/input --dry-run
 node --test cat-modeling/tests/*.test.mjs
 ```
 
-`--dry-run` 不创建目录、不写文件、不发布。infer 的 dry-run 在内存中计算任务和资产摘要；validate 的 dry-run 需要已有任务并实际检查文件；preview 计算诊断图但不落盘；publish 重新校验并显示独立暂存目录及所需确认令牌。默认输出 `cat-modeling/jobs/`（已忽略），`--root` 只允许该目录的后代或系统临时目录下的专用目录。拒绝遍历 ID、目录／文件符号链接和覆盖已有文件。输出目录不应由其他不可信进程共同写入。
+生产请求使用 `requestVersion:1` 和独立 `jobId`，记录操作 `model-fit`、`local-edit`、`groom-adjust`、`model-validate`（兼容 `groom-validate`）、modelId、原模型 SHA-256、模板／拓扑版本、米制右手 Y-up/+Z-forward 坐标约定、名义尺寸、几何／纹理预算及执行预算（超时、内存、CPU/GPU、显存）。执行预算当前只交接，不会启动推理去消耗它。参考图必须显式声明本地审查许可、主人同意、来源证据及内容摘要；未知／未授权字段失败。输入不包含照片远程 URL、账号、邮箱或真实记忆。
 
-## 文件契约
+示例模型 ID／全零摘要是占位符，示例许可字段仅演示结构，不能视为真实授权证据。只有示例的一像素 PNG 是本次原创协议测试数据。运行示例的完整文件检查会得到缺少私有模型的结果，不会假通过。[Python → Node 示例](contracts/examples/README.md) 只准备 JSON，不执行模型、Blender、网络或文件复制。
 
-机器可读规范位于 `schemas/`。运行时以严格输入校验、逐字节确定性重建与 GLB 二进制检查落实这些约束，而不是信任输入声称的能力或许可。未知字段和不支持的引擎一律失败。
+### 源检查与完整交付包检查
 
-| 文件 | 第一版语义 |
-| --- | --- |
-| `request.json` | `requestSchemaVersion:1`、引擎 ID 与四项 [0.5,1.5] 有限尺寸参数。规范键序的请求摘要形成 task ID。无用户资料或凭据。 |
-| `appearance.json` | `format:miaoxing.fixture.appearance`、fixture 专属 `designSchemaVersion:1`、拓扑和 groom 版本、确定性参数。**此格式不是造型室 v5 外观**，不能直接导入现有房间。生产适配器必须另行调用已有 creator design 迁移器并核对拓扑／能力，禁止只改版本数字。 |
-| `model.glb` | 自包含 GLB 2.0，命名节点 `bodySurface` 标记生长表面；无外链资源。没有 morph、骨骼或动画。 |
-| `groom.json` | `groomSchemaVersion:1`、显式 bodySurface、`representation:none`、空 guides。不得将原生 Blender Hair Curves 默认视为 GLB 可携带能力。 |
-| `manifest.json` | 任务 ID、四项独立版本、文件 SHA-256／字节数、显式表面、实际能力、来源和许可。`assetRevision` 是 `model.glb` 完整字节摘要，不是 design schema 版本。`productionCompatible:false`。 |
-| `validation.json` | 当前校验结论、错误、警告及摘要。仅作报告，编辑为 valid 不会放行 publish。 |
-| `preview.svg` / `preview.json` | 从已验证 GLB 顶点和节点变换生成固定斜视正交诊断投影、固定平涂材质；保存相机参数和图片摘要。不是 Blender／WebGL 物理渲染，不作为毛发和材质视觉通过结论。 |
+`inspect --request` 与 `preview --request` 检查输入 `model.glb` 的原模型摘要及参考文件，并可报告真实结构。`validate --request` 校验完整输出包，强制存在 `manifest.json`，以及 manifest 列出的 `appearance.json`、`model.glb`、`groom.json`、`features.json`、`preview.png`、`validation.json`。重新计算全部字节数／摘要，核对 request/job/model/template、四类版本、声明的尺寸／坐标／预算、输出 groom 的拓扑／表面、实际 GLB morph/骨骼/clip/材质清单和内嵌纹理摘要。历史 validation 报告须有正确身份和摘要，但不能替代本次重新检查。
 
-设计参数版本控制 appearance 的参数含义；拓扑版本控制顶点、节点、morph 与骨骼语义；groom 版本控制毛根和指南数据；assetRevision 只标识具体交付字节。生产引擎应显式声明支持的设计版本与拓扑组合，提供旧数据迁移及能力映射，不能套用 fixture 接口推断兼容性。
+局部编辑和拟合可产出新 appearance 值；输出仍必须满足同一模板与 designSchemaVersion，不能将不同拓扑参数套用旧资产。manifest 的许可不能比请求自报的权限扩大。自报 `verified` 只代表调用者提供了合法声明，独立授权证据审阅仍标为 `unrun`。
 
-后续生产适配器的请求、groom 绑定、授权证据与交付门槛见 [PRODUCTION-ADAPTER.md](./PRODUCTION-ADAPTER.md)；该草案没有被实现为生产推理接口。
+GLB 检查器验证二进制长度、嵌入资源、accessor 范围、有限值、primitive/index/morph 引用、三角网格资源、节点变换与树结构、皮肤引用和纹理摘要；拒绝目前未支持的 sparse accessor、外部纹理和非三角 primitive。它不是完整 Khronos conformance validator，不会从名字推断骨骼/动画/眼控语义；不会从米制/Y-up 字段推断真实解剖朝向、落地或实测尺寸。这些项目以及实际材质／毛发／视觉审查始终分别标 `unrun`，不存在“私有素材检查通过”的替代结论。
 
-## 校验与发布边界
+### 隔离、日志和本地交接
 
-校验检查实际请求、确定性 GLB 全字节、JSON/BIN 长度、bufferView/accessor 范围、有限顶点、唯一 bodySurface，以及 manifest、appearance、groom 与可信本地引擎重建结果是否一致。输出含每项摘要，可以追溯输入、引擎和资产。此 validator 限定于 fixture，**不是通用任意 GLB 校验器**。
+`--dry-run` 可读取并检查，但不创建目录、不写日志、不生成模型／预览。带请求的非 dry-run 操作写入默认 `cat-modeling/jobs/<jobId>/runs/run-NNNNNN-<command>/`，包含 JSON 结果和 `execution.log.jsonl`；重复运行新增不可变目录，已有 request 的 jobId 不能用于不同输入。日志只含命令、请求摘要、状态和执行事实，不记录照片内容或凭据。无合法 jobId 的参数／JSON 解析失败只有标准错误 JSON，不会猜测目录写入。无状态 inspect、contract-only validation 不写任务。
 
-`publish` 在当前版本只表示**独立 release 暂存**。它重新计算全部校验，拒绝未知／被篡改许可；真实写入还要求 `--confirm` 与 dry-run 中的 `stage:<taskId>:<assetRevision>` 完全相同。代理必须先向用户展示校验结果、预览限制和目标目录，取得明确同意后才传令牌。不得将程序自己算出令牌视为用户批准。暂存只复制固定校验文件到 `jobs/releases/<taskId>/`，再次调用会拒绝覆盖，不更新网站、当前模型、数据库或线上资产。正式线上发布未实现，必须另行实现和取得明确确认。
+自定义 `--root` 仅允许默认 jobs 后代或系统临时目录下的专用目录；拒绝遍历 ID、输入／输出符号链接、覆盖现有请求和路径越界。原始模型、数据库和用户记录不会被修改。`--input-root` 中的源文件只读；不会复制私有参考图到任务目录。
 
-只有本地可信 fixture 引擎的原创几何许可被声明可分发（见 `FIXTURE-LICENSE.md`）。用户或第三方素材授权未知时，只能按受限本地审查流程检查，不能传入当前 fixture 引擎、训练集、公共 release 或公共预览；需要后续引擎支持显式来源、授权证据引用及用途许可后才能扩大使用范围。不得用修改 manifest 的方式“确认授权”。
+`preview` 产生 `blender-task.json`，其中包括原模型／请求／现有渲染脚本／统一场景 SHA-256、真实脚本参数形态、固定相机灯光、执行预算、所需本地源 `.blend`／工具版本和未完成检查。argv 为数组、`shell:false`，包含 `--disable-autoexec`、`--python-exit-code 1` 和线程限制。命令中的路径占位符必须由本地执行器校验后替换，**不是可直接执行的云端命令**。原 `.blend` 授权、摘要与准确 Blender 版本尚待本地确认。任务使用现有 `scripts/render-cat-validation.py` 与 `lib/cat-visual-scenario.json`；当前 CLI 不调用进程、不执行 `.blend` 自动脚本、不渲染图片、不声称 preview 已完成。输出要求是 front/three/side PNG 及本地 validation 证据。原生 Blender hair/Cycles closure 不会被假定为 GLB 能力。
 
-测试覆盖 dry-run 无写入、参数严格性、确定性 GLB、诊断预览、摘要和许可篡改、伪造 validation、发布确认／无覆盖、路径与链接隔离和 CLI 退出状态。Node 测试运行器及 CLI 子进程在受限沙箱需要允许本地进程创建，否则会报 EPERM；不要将这个沙箱错误记成通过。
+结果以 JSON 输出：成功到 stdout，失败到 stderr。退出码：0 成功；2 参数错误；3 契约非法；4 文件／资源／摘要不合；5 私有资产缺失；6 `MODEL_UNAVAILABLE`；7 `PRODUCTION_PUBLISH_UNAVAILABLE`；8 本地 I/O。检查可用性成功（exit0）与模型可推理是不同事实。没有实际发布确认／后端时，不因请求自报确认而执行生产发布。
+
+## 显式测试 fixture（保留历史接口）
+
+仅加 `--engine fixture` 后才会使用仓库原创几何猫 `miaoxing-geometric-cat-v1`。它有身体、头、耳、四肢和尾部，是合法固定拓扑 GLB 2.0，没有骨骼、morph、动画、毛发或 AI。它的 appearance `designSchemaVersion:1` 命名空间是 `miaoxing.fixture.appearance`，**不是生产造型室 v5，也不能导入现有纪念房间**。旧 `schemas/` 仅属于该 fixture，新增生产协议位于 `contracts/`。
+
+```sh
+node cat-modeling/cli.mjs infer --engine fixture \
+  --request cat-modeling/examples/request.json --dry-run
+node cat-modeling/cli.mjs infer --engine fixture \
+  --request cat-modeling/examples/request.json
+node cat-modeling/cli.mjs validate --engine fixture \
+  --task task-7f6786d86bd7aaeee5841b70 --dry-run
+node cat-modeling/cli.mjs preview --engine fixture \
+  --task task-7f6786d86bd7aaeee5841b70 --dry-run
+node cat-modeling/cli.mjs publish --engine fixture \
+  --task task-7f6786d86bd7aaeee5841b70 --dry-run
+```
+
+相同 fixture 请求产生相同 task ID 和 GLB 字节；已有任务拒绝覆盖。它写入 request、appearance、model、groom、manifest、validation；preview 的 SVG 是实际 GLB 顶点的固定斜视诊断投影，不是物理毛发／材质视觉验收。`assetRevision` 是 GLB 字节 SHA-256，`topologyVersion` 标识几何契约，`groomSchemaVersion` 与参数版本独立。
+
+fixture 的 `publish` 仍仅为 `jobs/releases/<taskId>/` 的独立暂存。每次重新校验可信确定性引擎输出，拒绝篡改的几何、许可、伪造 validation；真正暂存还需要在展示具体任务、目标、预览限制并取得用户明确批准后传入 dry-run 中的精确确认令牌。代理自己算出令牌不等于用户同意。暂存绝不更新当前模型、网站或数据库；生产发布仍不可用。只有本次原创 fixture 几何按 [CC0 声明](FIXTURE-LICENSE.md) 使用，不能把该许可套给 Norwegian、Sphynx、原 Blender 或用户照片。未知授权素材只做受限本地审查，禁止训练和公共分发。

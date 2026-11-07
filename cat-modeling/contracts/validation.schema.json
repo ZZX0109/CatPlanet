@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "validationVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "jobId": {
+      "type": "string",
+      "pattern": "^job-[a-z0-9][a-z0-9-]{0,62}$"
+    },
+    "requestSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "valid",
+        "failed",
+        "missing-private-assets",
+        "unavailable"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "passed",
+              "failed",
+              "missing",
+              "unrun"
+            ]
+          },
+          "details": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "state",
+          "details"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "assetRevision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "capabilities": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "vertices": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "triangles": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "joints": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "textureBytes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "textureImages": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "bytes": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "name",
+                  "bytes",
+                  "sha256"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "meshNodeNames": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "meshNodeTriangleCounts": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "explicitBodySurfaceNodes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "morphTargets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "bones": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "animationClips": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "materials": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "semanticsVerified": {
+              "type": "boolean",
+              "const": false
+            },
+            "visualVerified": {
+              "type": "boolean",
+              "const": false
+            },
+            "licenseVerified": {
+              "type": "boolean",
+              "const": false
+            },
+            "coordinateSemanticsVerified": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "vertices",
+            "triangles",
+            "joints",
+            "textureBytes",
+            "textureImages",
+            "meshNodeNames",
+            "meshNodeTriangleCounts",
+            "explicitBodySurfaceNodes",
+            "morphTargets",
+            "bones",
+            "animationClips",
+            "materials",
+            "semanticsVerified",
+            "visualVerified",
+            "licenseVerified",
+            "coordinateSemanticsVerified"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "validationVersion",
+    "jobId",
+    "requestSha256",
+    "state",
+    "checks",
+    "errors",
+    "assetRevision",
+    "capabilities"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:miaoxing:cat-modeling:contracts:validation:1"
+}

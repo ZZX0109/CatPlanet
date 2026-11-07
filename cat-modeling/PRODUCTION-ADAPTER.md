@@ -1,29 +1,23 @@
-# 生产猫模型适配器规范草案
+# 生产猫模型适配器接入边界
 
-这是后续适配器的交付规范，**当前 CLI 仅支持 README 中的原创 fixture 引擎**，不接受下列生产请求，也不会将 fixture 外观导入现有房间。新增引擎应独立登记版本、许可来源和验收集，不能扩大现有 fixture validator 的能力声明。
+当前可执行契约和接口位于 [contracts/README.md](contracts/README.md)；统一 CLI 行为见 [README.md](README.md)。请求、输出、坐标、资源／执行预算、A/B/C 模块与许可字段已有严格 Zod 运行时和生成的 JSON Schema，不再只是文字草案。**真正的猫模型、权重、推理提供者和生产发布后端尚未实现**。
 
-## 请求和任务身份
+## 外观与拓扑
 
-`request.json` 应包含命名空间、`requestSchemaVersion`、`engineId`/`engineRevision`、输入文件的相对路径和 SHA-256、显式来源/授权证据引用、目标 `topologyVersion`、规范化设计参数、随机种子及用途（`restricted-review` / `distribution`）。不包含照片原始 URL、账号信息、邮箱、真实回忆或凭据。身份摘要覆盖规范化请求、引擎版本和输入哈希；任务追加不可变事件，不能将失败任务覆盖为成功。
+生产 `appearance.json` 目前采用扁平参数契约：`designSchemaVersion:5`、`templateId:cat-foundation-v1`、coatType、coatMode、完整 20 项 shape。应用内部旧别名 schemaVersion 由既有 `parseCreatorDesign` 负责兼容；CLI 交接时不能直接变更旧记录的版本数字。CLI 的生产外观不带数据库／资产 ID，不能把 fixture appearance 导入现有房间。后续应用适配器必须通过既有迁移器、模型能力检查和资产身份映射。
 
-许可记录须区分修改、产品运行、公共分发、训练、权重和生成结果的授权。`unknown` 或缺证据只能做受限审查；请求自称 `verified` 不能代替授权审核。未经确认的远程服务和训练在适配器执行前即拒绝。
+manifest 独立记录原模型 `modelRevision`、交付字节 `assetRevision`、designSchemaVersion、topologyVersion 和 groomSchemaVersion。多个版本各自表达参数、字节、顶点／绑定语义及毛根／guide 数据约定，不能互相替代。GLB 上实际 morph/骨骼/clip 名字只证明结构存在，不证明 face controls 或动画语义正确。
 
-## 外观和二进制
+A 形态接口、B 毛色／UV 纹理接口、C groom 接口各自 interfaceVersion1。尚无实现时必须 state unavailable；不能填入伪造 AI 权重、虚假 morph、UV 结果或 groom。B 在 unavailable 时允许空 UV revision，避免编造摘要。
 
-`appearance.json` 对当前生产母模使用 `format: miaoxing.cat.appearance` 的外层封装及 `design`，其中 `design` 必须经 `parseCreatorDesign` 迁移/校验，包含规范 `designSchemaVersion:5` 和保留的旧客户端别名 `schemaVersion:5`。封装还包含 `templateId`、`topologyVersion`、`groomSchemaVersion` 与引用的资产摘要。参数不可在读取时默默截断；不同品种/骨架需显式适配器。该封装不能直接当作现有房间的外观 JSON 导入，交接时使用校验后的 `design`。
+## Groom 与渲染
 
-`model.glb` 必须自包含、GLB 2.0、有限坐标，约定米制、Y-up、+Z forward。交付报告记录真实导出器版本、骨架/绑定、mesh primitive、morph 名称和 accessor 维数。不能只比较 morph 数量：必须逐控制验证 `_low/high` 的方向/范围、Blink 和其修正组合，确认中性形变不变。动画语义逐项映射到实际 clip/tracks，并标记站姿、程序姿态和源动画的区别。
+groom 绑定精确节点、拓扑版本、三角形索引和归一化重心坐标。重新拓扑后旧绑定拒绝，不按最大网格／第一张 SkinnedMesh 重贴。manifest 对眼控、材质、纹理、root binding 和渲染兼容性有显式字段，未验收项目使用 unrun/unverified。Blender 原生毛曲线及 Cycles 材质不是默认 GLB 可移植能力。
 
-## Groom 和显式表面
+四阶段视觉使用 `lib/cat-visual-scenario.json` 的共同设计、视角与名义光照，还需实际记录 Blender/Three 渲染器差异。CLI 只输出安全本地 Blender handoff，不执行 Blender、训练或重建。源 `.blend` 许可、源哈希和精确工具版本需本地核验，不能把云端缺失文件记录为视觉通过。
 
-`groom.json` 使用独立 `groomSchemaVersion`，声明 `representation`（如 `none`、`mesh-cards`、`curves-sidecar`）、毛层、长度/密度单位及随机种子。绑定字段必须包括精确 bodySurface 节点/primitive/材质角色、拓扑摘要、三角形索引与重心坐标、局部方向及 guide 数据。重心权重非负且和为 1；拓扑或顶点顺序改变即拒绝旧绑定，不能自动重贴到“最大网格”。
+## 输出、证据与正式发布
 
-显式节点可能被 glTF 多材质导出拆成多个 primitive，必须保留并核实身体/眼球等语义。`creatorRole:body-surface` 与 `creatorRole:eye-globe` 是当前运行时支持的角色；旧文件只使用有代码依据的母模节点和光学材质映射。静态毛层应声明支持的姿态范围，不能把它标为可随骨架动画。Blender 原生毛曲线/Cycles closure 不属于标准 GLB 默认能力，必须交付独立侧车或说明转换和损失。
+完整 validate 强制所有文件存在、hash／资源预算一致，复核输出与 request/manifest 的身份、拓扑和观察到的能力。不能编辑旧 validation.json 来跳过重新校验。原始资产、用户数据和数据库保留；任务目录为隔离、追加、不覆盖。
 
-## Manifest、验证和发布
-
-`manifest.json` 应包含全部文件哈希/字节数、输入到输出谱系、四类独立版本、坐标和单位、显式表面、材质/纹理/groom 表示、真实 morph 与骨骼清单、语义动画映射、支持的 design 版本、许可审核引用以及工具版本。`assetRevision` 是不可变二进制摘要；拓扑版本不能由 design 版本代替。
-
-`validation.json` 应分别记录结构/完整性、设计迁移、骨架/形变、groom、许可和视觉的 `passed` / `failed` / `blocked` / `unrun`，附执行命令、工具版本、源文件/截图哈希和限制。四阶段视觉对照使用 `lib/cat-visual-scenario.json` 的相同设计、姿态、视角和名义光照；必须另记 Cycles/Three 材质与光照差异及生产场景差异。单个汇总 `valid:true`、高像素相似度或已编辑的历史报告不能替代重算和人工视觉确认。
-
-未来正式发布只能选择不可变的新资产 ID：全部要求通过、展示目标/预览/限制、取得针对本次任务的明确确认后，再执行独立发布事务和保留回滚入口。未知许可、缺失原模型或视觉阶段受阻时拒绝激活。当前 CLI `publish` 只支持原创 fixture 的独立 release 暂存；旧 `models:publish-room` 也不会激活当前模型。
+未来真正发布必须另行实现不可变资产事务、完整验收证据、许可用途审核、针对本次任务的明确确认及回滚入口。现有 CLI 对生产 publish 无条件返回 unavailable；fixture 暂存不等于生产发布。未经确认的外部服务和素材、未知训练权和公开分发权在入口拒绝，当前实现不提供任何远程推理或训练通路。

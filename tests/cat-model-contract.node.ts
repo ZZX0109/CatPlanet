@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { creatorControls, defaultCreatorDesign, parseCreatorDesign, serializeCreatorDesign } from '../lib/cat-creator-design';
-import { creatorDesignContract } from '../lib/cat-model-contract';
-import { currentRoomAsset, roomModelAsset } from '../lib/room-model-assets';
-import { creatorTargetWeights } from '../lib/cat-creator-model';
-import { inspectCatAssetCapabilities, requiredCreatorFaceTargets, resolveCatBodySurface } from '../lib/cat-asset-capabilities';
+import { CAT_RENDERER, creatorDesignContract, defaultCatAssetRuntimeContract, validateCatRendererContract } from '../lib/cat-model-contract';
+import { currentRoomAsset, roomModelAsset, validateRoomModelAsset } from '../lib/room-model-assets';
+import { applyCreatorDesign, creatorTargetWeights, ownCreatorModel, type CreatorModel } from '../lib/cat-creator-model';
+import { inspectCatAssetCapabilities, requiredCreatorFaceTargets, resolveCatBodySurface, validateCatRuntimeCapabilities } from '../lib/cat-asset-capabilities';
 
 const shape = { ...defaultCreatorDesign.shape, headRound: 29, headWedge: 13, headWidth: 76, headFurDensity: 0, bodyFurLength: 97 };
 
@@ -76,22 +76,28 @@ test('bodySurface is independent of traversal and vertex count; ambiguity fails 
   assert.throws(() => resolveCatBodySurface(scene, 'norwegian'), /UV/);
 });
 
+function setTargets(mesh: THREE.Mesh, names: string[]) {
+  mesh.geometry.morphAttributes.position = names.map(() => new THREE.Float32BufferAttribute(new Float32Array(mesh.geometry.getAttribute('position').count * 3), 3));
+  mesh.morphTargetDictionary = Object.fromEntries(names.map((name, index) => [name, index]));
+  mesh.morphTargetInfluences = names.map(() => 0);
+}
+
 test('26 face targets and 53 including blink report different capabilities honestly', () => {
   const scene = new THREE.Group(), body = surface('NorwegianCat_Surface');
-  body.morphTargetDictionary = Object.fromEntries(requiredCreatorFaceTargets.map((name, i) => [name, i]));
+  setTargets(body, requiredCreatorFaceTargets);
   const boundBones = ['head', 'neck_01', 'PantherPelvis'].map(name => { const b = new THREE.Bone(); b.name = name; scene.add(b); return b; });
   body.bind(new THREE.Skeleton(boundBones));
   scene.add(body);
   const v26 = inspectCatAssetCapabilities(scene, [], 'norwegian');
   assert.equal(v26.morphTargetCount, 26); assert.equal(v26.supportsBlink, false); assert.equal(v26.compatible, true);
   const full = [...requiredCreatorFaceTargets, 'Blink', ...requiredCreatorFaceTargets.map(name => `Blink_${name}`)];
-  body.morphTargetDictionary = Object.fromEntries(full.map((name, i) => [name, i]));
+  setTargets(body, full);
   const v53 = inspectCatAssetCapabilities(scene, [new THREE.AnimationClip('UnknownSourceClip', 1, [])], 'norwegian');
   assert.equal(v53.morphTargetCount, 53); assert.equal(v53.blinkCorrectiveCount, 26);
   assert.equal(v53.motionSemantics.walk, 'unverified');
-  delete body.morphTargetDictionary.Shape_eyeSize_high;
+  delete body.morphTargetDictionary!.Shape_eyeSize_high;
   assert.deepEqual(inspectCatAssetCapabilities(scene, [], 'norwegian').missingFaceTargets, ['Shape_eyeSize_high']);
-  body.morphTargetDictionary.Shape_eyeSize_high = 52;
+  body.morphTargetDictionary!.Shape_eyeSize_high = 52;
   body.bind(new THREE.Skeleton([boundBones[0]]));
   const detached = inspectCatAssetCapabilities(scene, [], 'norwegian');
   assert.equal(detached.compatible, false, 'unrelated named bones do not establish a working skin binding');
@@ -144,4 +150,93 @@ test('legacy publisher refuses activation and binds restricted review to exact s
     await fs.appendFile(path.join(temporary, 'public/models/creator/norwegian-cat.glb'), 'tamper');
     assert.notEqual(run('--local-review-only', '--confirm', token).status, 0);
   } finally { await fs.rm(temporary, { recursive: true, force: true }); }
+});
+
+function runtimeScene() {
+  const scene = new THREE.Group(), body = surface('NorwegianCat_Surface');
+  setTargets(body, requiredCreatorFaceTargets);
+  const joints = ['head', 'neck_01', 'PantherPelvis'].map(name => {
+    const bone = new THREE.Bone(); bone.name = name; scene.add(bone); return bone;
+  });
+  body.bind(new THREE.Skeleton(joints)); scene.add(body);
+  return { scene, body };
+}
+
+const hasCode = (code: string) => (error: unknown) => error instanceof Error && 'code' in error && error.code === code;
+
+test('renderer requirements are versioned separately and do not certify uninspected private binaries', () => {
+  const asset = roomModelAsset(currentRoomAsset(defaultCreatorDesign), defaultCreatorDesign);
+  assert.equal(asset.capabilities.evidence, 'requirements-only');
+  assert.deepEqual(asset.rendererCompatibility.rendererVersions, [1]);
+  assert.equal(validateCatRendererContract(asset), asset);
+  const { scene } = runtimeScene();
+  const observed = validateCatRuntimeCapabilities(scene, [], 'norwegian', defaultCreatorDesign, asset);
+  assert.equal(observed.evidence, 'runtime-scene');
+  assert.ok(observed.observedCapabilities.includes('face-controls-v1'));
+  const incompatible = structuredClone(asset); incompatible.rendererCompatibility.rendererId = 'unsupported-renderer';
+  assert.throws(() => validateRoomModelAsset(incompatible, defaultCreatorDesign), hasCode('CAT_RENDERER_UNSUPPORTED'));
+  incompatible.rendererCompatibility.rendererId = CAT_RENDERER.rendererId;
+  incompatible.rendererCompatibility.rendererVersions = [2];
+  assert.throws(() => validateRoomModelAsset(incompatible, defaultCreatorDesign), hasCode('CAT_RENDERER_VERSION_UNSUPPORTED'));
+  incompatible.rendererCompatibility.rendererVersions = [1]; incompatible.rendererCompatibility.contractVersion = 99;
+  assert.throws(() => validateRoomModelAsset(incompatible, defaultCreatorDesign), hasCode('CAT_RENDERER_CONTRACT_UNSUPPORTED'));
+});
+
+test('unknown capability requirements fail before ownership and before a missing scene is accessed', () => {
+  const contract = defaultCatAssetRuntimeContract(); contract.capabilities.required.push('neural-fur-v99');
+  assert.throws(() => validateCatRendererContract(contract), hasCode('CAT_CAPABILITY_UNSUPPORTED'));
+  assert.throws(() => ownCreatorModel(undefined as unknown as THREE.Group, [], 'norwegian', { assetContract: contract }), hasCode('CAT_CAPABILITY_UNSUPPORTED'));
+});
+
+test('morph names without buffers, wrong cardinality, or controls only on eye meshes are refused', () => {
+  const { scene, body } = runtimeScene();
+  const index = body.morphTargetDictionary!.Shape_headWidth_high;
+  const attributes = body.geometry.morphAttributes.position!;
+  attributes[index] = new THREE.Float32BufferAttribute(new Float32Array(6), 3);
+  assert.throws(() => validateCatRuntimeCapabilities(scene, [], 'norwegian', defaultCreatorDesign), hasCode('CAT_ASSET_CAPABILITY_MISSING'));
+  setTargets(body, requiredCreatorFaceTargets);
+  body.morphTargetDictionary!.Shape_eyeSize_high = body.morphTargetDictionary!.Shape_headWidth_high;
+  assert.throws(() => validateCatRuntimeCapabilities(scene, [], 'norwegian', defaultCreatorDesign), hasCode('CAT_ASSET_CAPABILITY_MISSING'));
+  setTargets(body, requiredCreatorFaceTargets);
+  delete body.morphTargetDictionary!.Shape_eyeSize_high;
+  const eye = surface('unrelatedEye'); setTargets(eye, ['Shape_eyeSize_high']); scene.add(eye);
+  const observed = inspectCatAssetCapabilities(scene, [], 'norwegian');
+  assert.deepEqual(observed.missingFaceTargets, []);
+  assert.deepEqual(observed.missingBodyFaceTargets, ['Shape_eyeSize_high']);
+  assert.throws(() => validateCatRuntimeCapabilities(scene, [], 'norwegian', defaultCreatorDesign), hasCode('CAT_ASSET_CAPABILITY_MISSING'));
+  body.geometry.morphAttributes.position = [];
+  assert.throws(() => validateCatRuntimeCapabilities(scene, [], 'norwegian', defaultCreatorDesign), hasCode('CAT_ASSET_CAPABILITY_MISSING'));
+});
+
+test('a declared optional feature becomes mandatory only when requested and cannot be invented from metadata', () => {
+  const { scene, body } = runtimeScene();
+  const contract = defaultCatAssetRuntimeContract();
+  contract.capabilities.required.push('blink-correctives-v1');
+  assert.throws(() => validateCatRuntimeCapabilities(scene, [], 'norwegian', defaultCreatorDesign, contract), hasCode('CAT_ASSET_CAPABILITY_MISSING'));
+  setTargets(body, [...requiredCreatorFaceTargets, 'Blink', ...requiredCreatorFaceTargets.map(name => `Blink_${name}`)]);
+  assert.ok(validateCatRuntimeCapabilities(scene, [], 'norwegian', defaultCreatorDesign, contract).observedCapabilities.includes('blink-correctives-v1'));
+});
+
+test('old stored v3/v4/v5 appearances satisfy actual renderer checks without migrating their pinned asset identity', () => {
+  const { scene } = runtimeScene();
+  const oldAssetId = currentRoomAsset(defaultCreatorDesign);
+  for (const version of [3, 4, 5]) {
+    const stored = JSON.stringify({ schemaVersion: version, templateId: version === 3 ? 'norwegian-cat-v1' : 'cat-foundation-v1',
+      ...(version === 3 ? {} : { coatType: 'long', coatMode: 'source' }), shape });
+    const design = parseCreatorDesign(JSON.parse(stored));
+    const asset = roomModelAsset(oldAssetId, design);
+    assert.equal(validateCatRuntimeCapabilities(scene, [], 'norwegian', design, asset).compatible, true);
+    assert.equal(currentRoomAsset(design), oldAssetId);
+    assert.equal(design.shape.bodyFurLength, 97);
+    assert.equal(design.coatMode, version === 5 ? 'source' : 'groom');
+  }
+});
+
+test('absent model and unregistered asset produce explicit errors without resetting saved appearance', () => {
+  const saved = serializeCreatorDesign(defaultCreatorDesign);
+  assert.throws(() => ownCreatorModel(undefined as unknown as THREE.Group), hasCode('CAT_MODEL_MISSING'));
+  assert.throws(() => validateCatRuntimeCapabilities(undefined as unknown as THREE.Group, [], 'norwegian'), hasCode('CAT_MODEL_MISSING'));
+  assert.throws(() => roomModelAsset('missing-model.glb', defaultCreatorDesign), hasCode('CAT_ASSET_NOT_REGISTERED'));
+  assert.equal(serializeCreatorDesign(defaultCreatorDesign), saved);
+  assert.throws(() => applyCreatorDesign({ baseId: 'sphynx' } as CreatorModel, defaultCreatorDesign), hasCode('CAT_TOPOLOGY_INCOMPATIBLE'));
 });

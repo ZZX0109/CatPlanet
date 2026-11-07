@@ -1,0 +1,735 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "manifestVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "jobId": {
+      "type": "string",
+      "pattern": "^job-[a-z0-9][a-z0-9-]{0,62}$"
+    },
+    "requestSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "model-fit",
+        "local-edit",
+        "groom-adjust",
+        "model-validate",
+        "groom-validate"
+      ]
+    },
+    "modelId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+    },
+    "modelRevision": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "templateId": {
+      "type": "string",
+      "const": "cat-foundation-v1"
+    },
+    "designSchemaVersion": {
+      "type": "number",
+      "const": 5
+    },
+    "assetRevision": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "topologyVersion": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+    },
+    "groomSchemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "coordinates": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "type": "string",
+          "const": "meter"
+        },
+        "handedness": {
+          "type": "string",
+          "const": "right"
+        },
+        "up": {
+          "type": "string",
+          "const": "+Y"
+        },
+        "forward": {
+          "type": "string",
+          "const": "+Z"
+        },
+        "origin": {
+          "type": "string",
+          "const": "floor-center"
+        }
+      },
+      "required": [
+        "units",
+        "handedness",
+        "up",
+        "forward",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "dimensions": {
+      "type": "object",
+      "properties": {
+        "height": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10
+        },
+        "width": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10
+        },
+        "length": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "height",
+        "width",
+        "length"
+      ],
+      "additionalProperties": false
+    },
+    "budgets": {
+      "type": "object",
+      "properties": {
+        "maxVertices": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2500000
+        },
+        "maxTriangles": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5000000
+        },
+        "maxJoints": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "maxTextureBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 268435456
+        }
+      },
+      "required": [
+        "maxVertices",
+        "maxTriangles",
+        "maxJoints",
+        "maxTextureBytes"
+      ],
+      "additionalProperties": false
+    },
+    "executionBudget": {
+      "type": "object",
+      "properties": {
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "maxMemoryMiB": {
+          "type": "integer",
+          "minimum": 128,
+          "maximum": 65536
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "cpu",
+            "gpu",
+            "auto"
+          ]
+        },
+        "maxGpuMemoryMiB": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 49152
+        }
+      },
+      "required": [
+        "timeoutSeconds",
+        "maxMemoryMiB",
+        "device",
+        "maxGpuMemoryMiB"
+      ],
+      "additionalProperties": false
+    },
+    "rendererCompatibility": {
+      "type": "object",
+      "properties": {
+        "interfaceVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "gltfVersion": {
+          "type": "string",
+          "const": "2.0"
+        },
+        "threeRevision": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "blenderVersion": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verification": {
+          "type": "string",
+          "const": "unverified"
+        },
+        "nativeHairPortable": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "interfaceVersion",
+        "gltfVersion",
+        "threeRevision",
+        "blenderVersion",
+        "verification",
+        "nativeHairPortable"
+      ],
+      "additionalProperties": false
+    },
+    "license": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "verified"
+        },
+        "identifier": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "localReviewAllowed": {
+          "type": "boolean",
+          "const": true
+        },
+        "trainingAllowed": {
+          "type": "boolean"
+        },
+        "publicDistributionAllowed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status",
+        "identifier",
+        "localReviewAllowed",
+        "trainingAllowed",
+        "publicDistributionAllowed"
+      ],
+      "additionalProperties": false
+    },
+    "modules": {
+      "type": "object",
+      "properties": {
+        "A": {
+          "type": "string",
+          "enum": [
+            "unavailable",
+            "validated-output"
+          ]
+        },
+        "B": {
+          "type": "string",
+          "enum": [
+            "unavailable",
+            "validated-output"
+          ]
+        },
+        "C": {
+          "type": "string",
+          "enum": [
+            "unavailable",
+            "validated-output"
+          ]
+        }
+      },
+      "required": [
+        "A",
+        "B",
+        "C"
+      ],
+      "additionalProperties": false
+    },
+    "files": {
+      "type": "object",
+      "properties": {
+        "appearance.json": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 240,
+                  "pattern": "^(?!.*(?:^|\\/)\\.\\.?(?:\\/|$))[a-zA-Z0-9_-]+(?:\\/[a-zA-Z0-9._-]+)+$"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "appearance.json",
+                    "model.glb",
+                    "groom.json",
+                    "validation.json",
+                    "preview.png",
+                    "features.json"
+                  ]
+                }
+              ]
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 268435456
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "bytes"
+          ],
+          "additionalProperties": false
+        },
+        "model.glb": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 240,
+                  "pattern": "^(?!.*(?:^|\\/)\\.\\.?(?:\\/|$))[a-zA-Z0-9_-]+(?:\\/[a-zA-Z0-9._-]+)+$"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "appearance.json",
+                    "model.glb",
+                    "groom.json",
+                    "validation.json",
+                    "preview.png",
+                    "features.json"
+                  ]
+                }
+              ]
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 268435456
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "bytes"
+          ],
+          "additionalProperties": false
+        },
+        "groom.json": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 240,
+                  "pattern": "^(?!.*(?:^|\\/)\\.\\.?(?:\\/|$))[a-zA-Z0-9_-]+(?:\\/[a-zA-Z0-9._-]+)+$"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "appearance.json",
+                    "model.glb",
+                    "groom.json",
+                    "validation.json",
+                    "preview.png",
+                    "features.json"
+                  ]
+                }
+              ]
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 268435456
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "bytes"
+          ],
+          "additionalProperties": false
+        },
+        "features.json": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 240,
+                  "pattern": "^(?!.*(?:^|\\/)\\.\\.?(?:\\/|$))[a-zA-Z0-9_-]+(?:\\/[a-zA-Z0-9._-]+)+$"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "appearance.json",
+                    "model.glb",
+                    "groom.json",
+                    "validation.json",
+                    "preview.png",
+                    "features.json"
+                  ]
+                }
+              ]
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 268435456
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "bytes"
+          ],
+          "additionalProperties": false
+        },
+        "preview.png": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 240,
+                  "pattern": "^(?!.*(?:^|\\/)\\.\\.?(?:\\/|$))[a-zA-Z0-9_-]+(?:\\/[a-zA-Z0-9._-]+)+$"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "appearance.json",
+                    "model.glb",
+                    "groom.json",
+                    "validation.json",
+                    "preview.png",
+                    "features.json"
+                  ]
+                }
+              ]
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 268435456
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "bytes"
+          ],
+          "additionalProperties": false
+        },
+        "validation.json": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 240,
+                  "pattern": "^(?!.*(?:^|\\/)\\.\\.?(?:\\/|$))[a-zA-Z0-9_-]+(?:\\/[a-zA-Z0-9._-]+)+$"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "appearance.json",
+                    "model.glb",
+                    "groom.json",
+                    "validation.json",
+                    "preview.png",
+                    "features.json"
+                  ]
+                }
+              ]
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 268435456
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "bytes"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "appearance.json",
+        "model.glb",
+        "groom.json",
+        "features.json",
+        "preview.png",
+        "validation.json"
+      ],
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "bodySurfaceNode": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+        },
+        "morphTargets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+          }
+        },
+        "bones": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+          }
+        },
+        "animationClips": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "eyeControlTargets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+          }
+        },
+        "eyeControlsVerification": {
+          "type": "string",
+          "const": "unrun"
+        },
+        "materialNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "textureImages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "bytes": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "name",
+              "sha256",
+              "bytes"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "rootBinding": {
+          "type": "object",
+          "properties": {
+            "node": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "topologyVersion": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "verification": {
+              "type": "string",
+              "const": "unrun"
+            }
+          },
+          "required": [
+            "node",
+            "topologyVersion",
+            "verification"
+          ],
+          "additionalProperties": false
+        },
+        "groomRepresentation": {
+          "type": "string",
+          "enum": [
+            "none",
+            "guides",
+            "mesh",
+            "cards"
+          ]
+        }
+      },
+      "required": [
+        "bodySurfaceNode",
+        "morphTargets",
+        "bones",
+        "animationClips",
+        "eyeControlTargets",
+        "eyeControlsVerification",
+        "materialNames",
+        "textureImages",
+        "rootBinding",
+        "groomRepresentation"
+      ],
+      "additionalProperties": false
+    },
+    "productionEvidence": {
+      "type": "object",
+      "properties": {
+        "visualAcceptance": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "failed",
+            "passed"
+          ]
+        },
+        "reviewId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "licenseEvidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "userPublishConfirmation": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "visualAcceptance",
+        "reviewId",
+        "licenseEvidence",
+        "userPublishConfirmation"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "manifestVersion",
+    "jobId",
+    "requestSha256",
+    "operation",
+    "modelId",
+    "modelRevision",
+    "templateId",
+    "designSchemaVersion",
+    "assetRevision",
+    "topologyVersion",
+    "groomSchemaVersion",
+    "coordinates",
+    "dimensions",
+    "budgets",
+    "executionBudget",
+    "rendererCompatibility",
+    "license",
+    "modules",
+    "files",
+    "capabilities",
+    "productionEvidence"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:miaoxing:cat-modeling:contracts:manifest:1"
+}

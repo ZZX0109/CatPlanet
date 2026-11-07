@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "landmarks": {
+      "maxItems": 9,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "nose",
+              "eyeL",
+              "eyeR",
+              "earL",
+              "earR",
+              "pawFL",
+              "pawFR",
+              "pawBL",
+              "pawBR"
+            ]
+          },
+          "position": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "number",
+                "minimum": -10,
+                "maximum": 10
+              },
+              {
+                "type": "number",
+                "minimum": -10,
+                "maximum": 10
+              },
+              {
+                "type": "number",
+                "minimum": -10,
+                "maximum": 10
+              }
+            ],
+            "items": false,
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "measured",
+              "user-confirmed",
+              "inferred"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "name",
+          "position",
+          "source",
+          "confidence"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "landmarks"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:miaoxing:cat-modeling:contracts:features:1"
+}

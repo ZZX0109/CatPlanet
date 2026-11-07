@@ -1,4 +1,4 @@
-# 猫咪模型接入协议 v1
+# 猫咪模型接入协议 v2（兼容既有外观）
 
 此协议约定建模与房间开发的交付边界。建模侧维护母模、贴图、形变、毛发、骨架和制作脚本；房间侧维护档案、外观同步、交互和加载适配。当前房间适配器在 `components/RoomCreatorCat.tsx`，不修改母模。
 
@@ -8,11 +8,13 @@
 
 ## 外观与版本
 
-房间的 Pet.appearance 存完整 CreatorDesign 或 null。null 表示使用 Pet.model 的旧基础猫；非 null 优先渲染定制猫。当前 schemaVersion=4、templateId=cat-foundation-v1，coatType 支持 hairless/short/long；shape 名称、范围及头型混合约束全部由 `lib/cat-creator-design.ts` 的 parseCreatorDesign 管理，服务端和浏览器共同调用。旧 v3 挪威森林猫参数通过该解析器迁移。拒绝未知模板与未来版本，导入失败不覆盖已有外观。
+房间的 Pet.appearance 存完整 CreatorDesign 或 null。null 表示使用 Pet.model 的旧基础猫；非 null 优先渲染定制猫。当前规范 `designSchemaVersion=5`，保留旧客户端的 `schemaVersion=5` 别名；`templateId=cat-foundation-v1`，coatType 支持 hairless/short/long。shape 名称、范围及头型混合约束全部由 `lib/cat-creator-design.ts` 的 parseCreatorDesign 管理，服务端和浏览器共同调用。旧 v3/v4 参数经同一解析器迁移，保留脸型、毛量和毛长；v3/v4 恢复 groom 模式，v5 的显式 source 模式保留。冲突的版本别名、未知模板与未来版本会被拒绝，导入失败不覆盖已有外观。
 
 房间只接收参数 JSON，不接收用户指定的模型地址或可执行内容。hairless 映射 sphynx 母模，short/long 映射 norwegian 母模。模型须具备 ownCreatorModel 校验的模板标识、头部范围、五官定位、骨架及形变目标。
 
-不兼容的参数语义或拓扑调整必须升级 templateId/schemaVersion 并提供迁移或明确拒绝；发布资产应增加不可变版本路径与内容哈希，旧版本需要保留到存档迁移完成。造型室继续使用开发资产；房间使用独立的不可变 GLB 存档，`lib/room-model-assets.json` 登记完整 SHA-256、字节数、模板版本、基础类型、方向和场景尺寸。`Pet.appearanceAsset` 单独保存模型版本，不改变建模侧的外观 JSON 格式。
+各版本含义独立：`designSchemaVersion` 表达参数语义；`assetRevision` 为具体 GLB 的完整 SHA-256；`topologyVersion` 表达顶点/UV/节点/骨架与形变布局；`groomSchemaVersion` 表达毛根与引导数据表示；`rendererCompatibility` 表达运行时适配协议；`capabilities` 区分加载要求与实际观测能力。不兼容变化必须提供对应迁移或明确拒绝，不能通过修改一个版本数字隐式兼容。旧资产保留的 `schemaVersion:4` 是历史登记信息，不作为参数 v5 的相等校验依据。
+
+造型室继续使用开发资产；房间使用独立的不可变 GLB 存档，`lib/room-model-assets.json` 登记完整 SHA-256、字节数、模板版本、基础类型、方向、场景尺寸及兼容要求。`Pet.appearanceAsset` 单独保存模型版本，不改变建模侧的外观 JSON 格式。声明某项要求不代表真实私有 GLB 已通过检查；加载后必须检查实际 morph/骨架绑定/显式身体表面，不能拿 manifest 的数量代替二进制验收。
 
 房间保存时校验模型版本与毛发类型是否匹配，忽略客户端模型 URL；旧客户端省略外观时保留原外观与版本。既有资料迁移只为缺少模型版本的外观绑定首次存档，不能恢复在建立存档前已被覆盖的历史模型。切换基础猫会清空外观和版本，重新导入造型室 JSON 会选择当前已发布版本。
 
@@ -33,16 +35,17 @@
 当前素材对外分发授权和实体设备性能仍待确认。协议不代表这些验收已完成。
 
 
-## 发布房间模型版本
+## 本地审查与发布边界
 
-在建模侧完成母模并通过美术检查后执行：
+先对当前源文件生成只读审查计划；源文件缺失时应失败，不能记为模型通过：
 
 ```sh
-npm run models:publish-room
+npm run models:publish-room -- --plan
 npm run models:check-room
-npm run db:migrate
 ```
 
-发布脚本读取当前两套开发 GLB，确认自包含后，以完整内容哈希写入 `public/models/room/`，使用独占写入避免覆盖旧文件，并原子更新登记表。再次发布相同文件不产生新版本。新版本只修改当前推荐版本并追加登记，已保存宠物继续引用旧版本；禁止删除仍被宠物或本机草稿引用的存档。
+当前 `models:publish-room` **不激活新模型、不更新登记表**。素材分发权限和真实视觉验收仍未确认，正式发布入口明确拒绝；仅在明确批准后，允许 `--local-review-only --confirm <本次计划摘要>` 写入受限 `.data/cat-model-review/` 新目录。该确认仅授权本地审查，不授权公开分发。发布不需要运行数据库迁移；本轮禁止改动生产数据库、删除旧模型或切换 current。
 
-`models:check-room` 独立核对所有登记文件的长度与哈希。部署前应执行此检查，发布时保留全部登记文件。当前复制并登记的是本地开发资产，分发权限仍为未核实，不代表已经获得公开发布许可。
+`models:check-room` 独立核对所有登记文件的长度与哈希。公开仓库不包含私有 Norwegian/Sphynx 和房间 GLB，这个检查在缺少文件时会失败，不能用静态单元测试替代。未来正式发布必须附上本地 Blender/骨架/毛发/动作与固定机位视觉证据，核实来源授权并取得明确批准；仍须保留所有被档案或草稿引用的旧资产。
+
+云端任务协议和 CLI 见 [cat-modeling/README.md](../cat-modeling/README.md) 与 [云端重构报告](./CAT-MODELING-CLOUD-REFACTOR.md)。没有已配置的模型/权重时，生产 infer 返回不可用；原创 fixture 只是公开工程回归样本。Next.js 请求处理进程不执行 GPU 推理或训练。

@@ -54,7 +54,7 @@ export default function RoomCreatorCat({
           bytes,
           new URL(asset.url, location.href).href,
         );
-        owned = ownCreatorModel(gltf.scene, gltf.animations, base);
+        owned = ownCreatorModel(gltf.scene, gltf.animations, base, { assetContract: asset, design });
         if (!active) {
           owned.dispose();
           return;

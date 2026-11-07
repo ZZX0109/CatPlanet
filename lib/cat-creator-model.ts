@@ -4,7 +4,9 @@ import type { NorwegianFur } from "./norwegian-fur";
 import type { CatCoatType } from "./cat-coat-profiles";
 import { createCreatorMotion, type CreatorMotion } from "./cat-creator-motion";
 import { createCatNativeCoatTuner } from "./cat-native-coat";
-import { inspectCatAssetCapabilities, resolveCatBodySurface } from "./cat-asset-capabilities";
+import { inspectCatAssetCapabilities, resolveCatBodySurface, validateCatRuntimeCapabilities } from "./cat-asset-capabilities";
+import { CatModelContractError, catTopologyVersion, creatorDesignContract, defaultCatAssetRuntimeContract,
+  validateCatRendererContract, type CatAssetRuntimeContract } from "./cat-model-contract";
 import {
   creatorControls,
   parseCreatorDesign,
@@ -69,7 +71,12 @@ export function ownCreatorModel(
   scene: THREE.Group,
   animations: THREE.AnimationClip[] = [],
   expectedBase?: "norwegian" | "sphynx",
+  options: { assetContract?: CatAssetRuntimeContract; design?: CreatorDesign } = {},
 ): CreatorModel {
+  const assetContract = options.assetContract ?? defaultCatAssetRuntimeContract();
+  validateCatRendererContract(assetContract);
+  if (!(scene instanceof THREE.Group))
+    throw new CatModelContractError("CAT_MODEL_MISSING", "猫咪模型未加载或格式不完整，原外观已保留。");
   const meshes: THREE.Mesh[] = [];
   const geometries = new Set<THREE.BufferGeometry>();
   const materials = new Map<THREE.Mesh, THREE.Material | THREE.Material[]>();
@@ -133,7 +140,7 @@ export function ownCreatorModel(
         : "norwegian";
     if (expectedBase && baseId !== expectedBase)
       throw new Error("基础猫与当前选择不匹配，请重新加载。");
-    const capabilities = inspectCatAssetCapabilities(scene, animations, baseId);
+    const capabilities = validateCatRuntimeCapabilities(scene, animations, baseId, options.design, assetContract);
     const bodySurface = resolveCatBodySurface(scene, baseId);
     if (capabilities.missingSemanticBones.length || capabilities.missingBoundSemanticBones.length)
       throw new Error(`猫咪骨骼语义或表面绑定缺失：${[...new Set([
@@ -254,7 +261,7 @@ export function ownCreatorModel(
         return local.applyMatrix4(current.invert());
       },
       supportsBlink:
-        targetNames.has("Blink") &&
+        capabilities.supportsBlink &&
         (data.creatorFeatures as { blink?: boolean } | undefined)?.blink ===
           true,
       tuneCoatSurface(coat, mode = "source") {
@@ -321,6 +328,8 @@ export function applyCreatorDesign(
   blink = 0,
   options: { groom?: boolean } = {},
 ) {
+  if (creatorDesignContract(design).topologyVersion !== catTopologyVersion(model.baseId))
+    throw new CatModelContractError("CAT_TOPOLOGY_INCOMPATIBLE", "当前猫咪模型不能应用另一套拓扑的外观。");
   const weights = creatorTargetWeights(
     design,
     model.supportsBlink ? blink : 0,

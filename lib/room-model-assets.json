@@ -20,7 +20,28 @@
       "groomSchemaVersion": 1,
       "supportedDesignSchemaVersions": [
         5
-      ]
+      ],
+      "rendererCompatibility": {
+        "contractVersion": 1,
+        "rendererId": "miaoxing-three-cat",
+        "rendererVersions": [
+          1
+        ]
+      },
+      "capabilities": {
+        "declarationVersion": 1,
+        "evidence": "requirements-only",
+        "required": [
+          "face-controls-v1",
+          "skinned-body-surface-v1",
+          "rig-semantics-v1",
+          "source-materials-v1"
+        ],
+        "optional": [
+          "groom-surface-v1",
+          "blink-correctives-v1"
+        ]
+      }
     },
     "sphynx-de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784": {
       "base": "sphynx",
@@ -37,7 +58,28 @@
       "groomSchemaVersion": 1,
       "supportedDesignSchemaVersions": [
         5
-      ]
+      ],
+      "rendererCompatibility": {
+        "contractVersion": 1,
+        "rendererId": "miaoxing-three-cat",
+        "rendererVersions": [
+          1
+        ]
+      },
+      "capabilities": {
+        "declarationVersion": 1,
+        "evidence": "requirements-only",
+        "required": [
+          "face-controls-v1",
+          "skinned-body-surface-v1",
+          "rig-semantics-v1",
+          "source-materials-v1"
+        ],
+        "optional": [
+          "groom-surface-v1",
+          "blink-correctives-v1"
+        ]
+      }
     }
   }
 }

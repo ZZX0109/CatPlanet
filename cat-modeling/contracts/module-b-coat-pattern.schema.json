@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "interfaceVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "requestSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "modelId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+    },
+    "modelRevision": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "topologyVersion": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+    },
+    "coordinates": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "type": "string",
+          "const": "meter"
+        },
+        "handedness": {
+          "type": "string",
+          "const": "right"
+        },
+        "up": {
+          "type": "string",
+          "const": "+Y"
+        },
+        "forward": {
+          "type": "string",
+          "const": "+Z"
+        },
+        "origin": {
+          "type": "string",
+          "const": "floor-center"
+        }
+      },
+      "required": [
+        "units",
+        "handedness",
+        "up",
+        "forward",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "module": {
+      "type": "string",
+      "const": "B-coat-pattern"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "unavailable",
+        "validated-output"
+      ]
+    },
+    "uvLayoutRevision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "pattern": {
+      "type": "object",
+      "properties": {
+        "patternVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "unchanged",
+            "solid",
+            "tabby",
+            "bicolor"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "user-confirmed",
+            "model-inference"
+          ]
+        },
+        "textures": {
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 240,
+                    "pattern": "^(?!.*(?:^|\\/)\\.\\.?(?:\\/|$))[a-zA-Z0-9_-]+(?:\\/[a-zA-Z0-9._-]+)+$"
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "appearance.json",
+                      "model.glb",
+                      "groom.json",
+                      "validation.json",
+                      "preview.png",
+                      "features.json"
+                    ]
+                  }
+                ]
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 268435456
+              }
+            },
+            "required": [
+              "path",
+              "sha256",
+              "bytes"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "patternVersion",
+        "kind",
+        "source",
+        "textures"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "interfaceVersion",
+    "requestSha256",
+    "modelId",
+    "modelRevision",
+    "topologyVersion",
+    "coordinates",
+    "module",
+    "state",
+    "uvLayoutRevision",
+    "pattern"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:miaoxing:cat-modeling:contracts:module-b-coat-pattern:1"
+}

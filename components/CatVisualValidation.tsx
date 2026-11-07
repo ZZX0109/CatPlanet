@@ -51,7 +51,8 @@ export default function CatVisualValidation() {
         if (asset && (sourceSha256 !== asset.sha256 || bytes.byteLength !== asset.bytes)) throw new Error("Room archive integrity failed");
         const loader = new GLTFLoader();
         const gltf = await loader.parseAsync(bytes, new URL(url, location.href).href);
-        owned = ownCreatorModel(gltf.scene, gltf.animations, base);
+        owned = ownCreatorModel(gltf.scene, gltf.animations, base,
+          asset ? { assetContract: asset, design } : { design });
         if (base !== "sphynx") {
           const surface = owned.bodySurface;
           owned.fur = await createNorwegianFur(owned.scene, surface, { includeGroom: design.coatMode === "groom" });

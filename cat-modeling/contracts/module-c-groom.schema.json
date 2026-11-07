@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "interfaceVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "requestSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "modelId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+    },
+    "modelRevision": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "topologyVersion": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+    },
+    "coordinates": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "type": "string",
+          "const": "meter"
+        },
+        "handedness": {
+          "type": "string",
+          "const": "right"
+        },
+        "up": {
+          "type": "string",
+          "const": "+Y"
+        },
+        "forward": {
+          "type": "string",
+          "const": "+Z"
+        },
+        "origin": {
+          "type": "string",
+          "const": "floor-center"
+        }
+      },
+      "required": [
+        "units",
+        "handedness",
+        "up",
+        "forward",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "module": {
+      "type": "string",
+      "const": "C-groom"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "unavailable",
+        "validated-output"
+      ]
+    },
+    "groom": {
+      "type": "object",
+      "properties": {
+        "groomSchemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "topologyVersion": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+        },
+        "bodySurface": {
+          "type": "object",
+          "properties": {
+            "node": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            }
+          },
+          "required": [
+            "node"
+          ],
+          "additionalProperties": false
+        },
+        "representation": {
+          "type": "string",
+          "enum": [
+            "none",
+            "guides"
+          ]
+        },
+        "guides": {
+          "maxItems": 100000,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rootBinding": {
+                "type": "object",
+                "properties": {
+                  "node": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+                  },
+                  "triangleIndex": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "barycentric": {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 3,
+                    "maxItems": 3
+                  }
+                },
+                "required": [
+                  "node",
+                  "triangleIndex",
+                  "barycentric"
+                ],
+                "additionalProperties": false
+              },
+              "points": {
+                "minItems": 2,
+                "maxItems": 64,
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": -10,
+                      "maximum": 10
+                    },
+                    {
+                      "type": "number",
+                      "minimum": -10,
+                      "maximum": 10
+                    },
+                    {
+                      "type": "number",
+                      "minimum": -10,
+                      "maximum": 10
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 3,
+                  "maxItems": 3
+                }
+              },
+              "radiusMeters": {
+                "type": "number",
+                "minimum": 0.000001,
+                "maximum": 0.01
+              }
+            },
+            "required": [
+              "rootBinding",
+              "points",
+              "radiusMeters"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "groomSchemaVersion",
+        "topologyVersion",
+        "bodySurface",
+        "representation",
+        "guides"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "interfaceVersion",
+    "requestSha256",
+    "modelId",
+    "modelRevision",
+    "topologyVersion",
+    "coordinates",
+    "module",
+    "state",
+    "groom"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:miaoxing:cat-modeling:contracts:module-c-groom:1"
+}

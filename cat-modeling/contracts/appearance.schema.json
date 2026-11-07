@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "designSchemaVersion": {
+      "type": "number",
+      "const": 5
+    },
+    "templateId": {
+      "type": "string",
+      "const": "cat-foundation-v1"
+    },
+    "coatType": {
+      "type": "string",
+      "enum": [
+        "long",
+        "short",
+        "hairless"
+      ]
+    },
+    "coatMode": {
+      "type": "string",
+      "enum": [
+        "source",
+        "groom"
+      ]
+    },
+    "shape": {
+      "type": "object",
+      "properties": {
+        "headRound": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "headWedge": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "headWidth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "headDepth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "cheeks": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "jaw": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "muzzle": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "muzzleWidth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "noseBridge": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "eyeSize": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "eyeSpacing": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "eyeTilt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "earSize": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "earTilt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "headFurDensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "headFurLength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "ruffFurDensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "ruffFurLength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "bodyFurDensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "bodyFurLength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "headRound",
+        "headWedge",
+        "headWidth",
+        "headDepth",
+        "cheeks",
+        "jaw",
+        "muzzle",
+        "muzzleWidth",
+        "noseBridge",
+        "eyeSize",
+        "eyeSpacing",
+        "eyeTilt",
+        "earSize",
+        "earTilt",
+        "headFurDensity",
+        "headFurLength",
+        "ruffFurDensity",
+        "ruffFurLength",
+        "bodyFurDensity",
+        "bodyFurLength"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "designSchemaVersion",
+    "templateId",
+    "coatType",
+    "coatMode",
+    "shape"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:miaoxing:cat-modeling:contracts:appearance:1"
+}

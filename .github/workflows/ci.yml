@@ -27,6 +27,22 @@ jobs:
           node-version: "22"
           cache: npm
       - run: npm ci
+      - name: Public cat-modeling contracts and CLI regression
+        run: npm run test:cat-modeling
+      - name: Install Chromium for public browser fixtures
+        run: npx playwright install --with-deps chromium
+      - name: Browser GLB contracts and isolated room regressions
+        run: npm run test:cat-modeling:browser
+      - name: Retain test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-cat-modeling-test-results
+          path: |
+            test-results/
+            playwright-report/
+            artifacts/local-room/
+          if-no-files-found: ignore
       - run: npm run typecheck
       - run: npm run build
 

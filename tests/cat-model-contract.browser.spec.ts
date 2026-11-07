@@ -41,11 +41,11 @@ window.__catContractBrowser=async()=>{
   mesh.bind(new THREE.Skeleton([pelvis,neck,head]));group.add(mesh);group.updateMatrixWorld(true);
   const bytes=await new GLTFExporter().parseAsync(group,{binary:true});
   const decoded=await new GLTFLoader().parseAsync(bytes,'');
-  const owned=ownCreatorModel(decoded.scene,decoded.animations,'sphynx');
   const old={schemaVersion:4,templateId:'cat-foundation-v1',coatType:'hairless',shape:{...defaultCreatorDesign.shape,headWidth:76,headRound:17,headWedge:11}};
   const design=parseCreatorDesign(old);
   const roundTrip=parseCreatorDesign(JSON.parse(serializeCreatorDesign(design)));
   const asset=roomModelAsset(currentRoomAsset(roundTrip),roundTrip);
+  const owned=ownCreatorModel(decoded.scene,decoded.animations,'sphynx',{assetContract:asset,design:roundTrip});
   applyCreatorDesign(owned,roundTrip);
   const body=owned.bodySurface;
   const index=body.morphTargetDictionary.Shape_headWidth_high;
@@ -53,7 +53,8 @@ window.__catContractBrowser=async()=>{
   const result={fixtureOnly:true,primitives:owned.meshes.length,bodyMaterial:body.material.name,
     designSchemaVersion:roundTrip.designSchemaVersion,legacyAssetSchemaVersion:asset.schemaVersion,
     assetRevision:asset.assetRevision,targets:owned.capabilities.morphTargetCount,
-    weight:body.morphTargetInfluences[index],vertexX:vertex.x,compatible:owned.capabilities.compatible};
+    weight:body.morphTargetInfluences[index],vertexX:vertex.x,compatible:owned.capabilities.compatible,
+    observedCapabilities:owned.capabilities.observedCapabilities,rendererId:asset.rendererCompatibility.rendererId};
   owned.dispose();return result;
 };` },
     bundle: true, write: false, platform: 'browser', format: 'iife',
@@ -66,6 +67,8 @@ window.__catContractBrowser=async()=>{
   expect(actual.bodyMaterial).toBe('Skin');
   expect(actual.targets).toBe(26);
   expect(actual.compatible).toBe(true);
+  expect(actual.rendererId).toBe('miaoxing-three-cat');
+  expect(actual.observedCapabilities).toContain('face-controls-v1');
   expect(actual.designSchemaVersion).toBe(5);
   expect(actual.legacyAssetSchemaVersion).toBe(4);
   expect(actual.assetRevision).toMatch(/^[a-f0-9]{64}$/);

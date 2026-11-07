@@ -1,0 +1,81 @@
+{
+  "requestVersion": 1,
+  "jobId": "job-example-local-edit",
+  "operation": "local-edit",
+  "modelId": "user-local-model-placeholder",
+  "modelRevision": "0000000000000000000000000000000000000000000000000000000000000000",
+  "templateId": "cat-foundation-v1",
+  "topologyVersion": "norwegian-cat-v1",
+  "coordinates": {
+    "units": "meter",
+    "handedness": "right",
+    "up": "+Y",
+    "forward": "+Z",
+    "origin": "floor-center"
+  },
+  "dimensions": {
+    "height": 0.3,
+    "width": 0.2,
+    "length": 0.5
+  },
+  "budgets": {
+    "maxVertices": 250000,
+    "maxTriangles": 500000,
+    "maxJoints": 256,
+    "maxTextureBytes": 67108864
+  },
+  "appearance": {
+    "designSchemaVersion": 5,
+    "templateId": "cat-foundation-v1",
+    "coatType": "long",
+    "coatMode": "groom",
+    "shape": {
+      "headRound": 0,
+      "headWedge": 0,
+      "headWidth": 50,
+      "headDepth": 50,
+      "cheeks": 50,
+      "jaw": 50,
+      "muzzle": 50,
+      "muzzleWidth": 50,
+      "noseBridge": 50,
+      "eyeSize": 50,
+      "eyeSpacing": 50,
+      "eyeTilt": 50,
+      "earSize": 50,
+      "earTilt": 50,
+      "headFurDensity": 80,
+      "headFurLength": 55,
+      "ruffFurDensity": 80,
+      "ruffFurLength": 70,
+      "bodyFurDensity": 80,
+      "bodyFurLength": 65
+    }
+  },
+  "groom": {
+    "groomSchemaVersion": 1,
+    "topologyVersion": "norwegian-cat-v1",
+    "bodySurface": {
+      "node": "NorwegianCat_Surface"
+    },
+    "representation": "none",
+    "guides": []
+  },
+  "features": {
+    "landmarks": []
+  },
+  "references": [],
+  "modelLicense": {
+    "status": "verified",
+    "identifier": "example-only-not-evidence",
+    "localReviewAllowed": true,
+    "trainingAllowed": false,
+    "publicDistributionAllowed": false
+  },
+  "executionBudget": {
+    "timeoutSeconds": 300,
+    "maxMemoryMiB": 4096,
+    "device": "cpu",
+    "maxGpuMemoryMiB": 0
+  }
+}
