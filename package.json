@@ -18,10 +18,12 @@
     "cleanup": "tsx --env-file=.env.local scripts/cleanup.ts",
     "test": "playwright test",
     "cat-modeling": "node cat-modeling/cli.mjs",
-    "test:cat-modeling": "node --import tsx tests/cat-model-contract.node.ts && node --import tsx tests/cat-visual-contract.node.ts && node --test cat-modeling/tests/*.test.mjs",
+    "test:cat-modeling": "node --import tsx tests/cat-model-contract.node.ts && node --import tsx tests/cat-visual-contract.node.ts && node --test cat-modeling/tests/*.test.mjs && npm run test:vision-poc",
     "models:visual:plan": "node --import tsx scripts/validate-cat-visuals.ts --dry-run",
     "models:visual": "node --import tsx scripts/validate-cat-visuals.ts",
-    "test:cat-modeling:browser": "playwright test --config tests/cat-foundation.playwright.config.ts"
+    "test:cat-modeling:browser": "playwright test --config tests/cat-foundation.playwright.config.ts",
+    "test:vision-poc": "node --test cat-modeling/vision-poc/tests/*.test.mjs",
+    "vision:poc": "node cat-modeling/vision-poc/calibrate.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

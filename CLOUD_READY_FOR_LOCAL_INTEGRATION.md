@@ -2,6 +2,8 @@
 
 日期：2026-11-08（Asia/Shanghai）。分支：`feat/cat-modeling-foundation`。本轮准备的是**本地真实资产集成前置工程**，不是生产发布、真实猫美术验收或 AI 照片转三维已完成。
 
+本页记录 Sparse/本地回传基础阶段的证据。下一阶段视觉驱动设计与校准实验见 [CAT-VISION-DRIVEN-MODELING.md](docs/CAT-VISION-DRIVEN-MODELING.md)；其合成图像反馈结果不能替代本页的真实资产待验项，也不表示已安装猫专用视觉模型。
+
 ## 已完成
 
 - 支持 glTF Sparse Accessor：无基础 bufferView 的零初始化、dense+稀疏覆盖、UBYTE/USHORT/UINT 索引、偏移/对齐/范围/有限值、矩阵列填充及合法尾部省略。primitive 索引、动画时间使用实际解码值。测试在临时隔离仓库运行真实 `compact-creator-glb.mjs`，得到合法 sparse 和全零 morph，没有替换真实模型。
