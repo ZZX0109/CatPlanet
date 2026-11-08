@@ -5,6 +5,9 @@ import { parseContract } from "./contracts/index.mjs";
 import { inspectGlb } from "./contracts/glb-inspector.mjs";
 import { safeRoot, DEFAULT_ROOT } from "./pipeline.mjs";
 import { sha256, jsonBytes } from "./protocol.mjs";
+import { noLinks, readBoundedFile } from "./file-access.mjs";
+import { validateLocalResult } from "./local-executor.mjs";
+import { validatePngEvidence } from "./png-evidence.mjs";
 export const EXIT_CODES = {
   OK: 0,
   INVALID_ARGUMENT: 2,
@@ -35,30 +38,15 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 export function fail(code, message) {
   return Object.assign(Error(message), { code });
 }
-function noLinks(p) {
-  const abs = path.resolve(p);
-  let cur = path.parse(abs).root;
-  for (const part of abs.slice(cur.length).split(path.sep).filter(Boolean)) {
-    cur = path.join(cur, part);
-    try {
-      if (fs.lstatSync(cur).isSymbolicLink())
-        throw fail("IO_ERROR", "Symlink paths are not permitted");
-    } catch (e) {
-      if (e.code !== "ENOENT") throw e;
-    }
-  }
-  return abs;
-}
-export function readDocument(file) {
-  const p = noLinks(file),
-    s = fs.lstatSync(p);
-  if (!s.isFile() || s.size > 4 * 1024 * 1024)
-    throw fail("CONTRACT_INVALID", "Expected JSON document under 4 MiB");
+function parseDocument(bytes) {
   try {
-    return JSON.parse(fs.readFileSync(p, "utf8"));
+    return JSON.parse(bytes.toString("utf8"));
   } catch {
     throw fail("CONTRACT_INVALID", "Malformed JSON document");
   }
+}
+export function readDocument(file, { maxBytes = 4 * 1024 * 1024 } = {}) {
+  return parseDocument(readBoundedFile(file, maxBytes, "CONTRACT_INVALID"));
 }
 function scopedFile(root, relative) {
   if (
@@ -72,10 +60,14 @@ function scopedFile(root, relative) {
     p = noLinks(path.join(base, relative));
   if (!p.startsWith(base + path.sep))
     throw fail("FILES_INVALID", "File escapes input directory");
-  const s = fs.lstatSync(p);
-  if (!s.isFile() || s.size > 268435456)
-    throw fail("FILES_INVALID", "Expected bounded regular artifact");
-  return fs.readFileSync(p);
+  return readBoundedFile(
+    p,
+    relative.endsWith(".json")
+      ? 4 * 1024 * 1024
+      : relative === "preview.png"
+        ? 32 * 1024 * 1024
+        : 268435456,
+  );
 }
 function check(name, fn, checks, errors) {
   try {
@@ -154,10 +146,14 @@ export function validateFiles(
     if (e.code !== "ENOENT" || requirePackage) {
       checks.push({
         name: "manifest-contract",
-        state: "failed",
-        details: e.message,
+        state: e.code === "ENOENT" ? "missing" : "failed",
+        details:
+          e.code === "ENOENT" ? "Private/local artifact is absent" : e.message,
       });
-      errors.push({ code: "FILES_INVALID", message: e.message });
+      errors.push({
+        code: e.code === "ENOENT" ? "PRIVATE_ASSETS_MISSING" : "FILES_INVALID",
+        message: e.message,
+      });
     }
   }
   if (manifest) {
@@ -226,8 +222,7 @@ export function validateFiles(
                 "Output validation report identity/state mismatch",
               );
           }
-          if (name === "preview.png" && !imageMatches(b, "image/png"))
-            throw fail("FILES_INVALID", "Preview is not PNG");
+          if (name === "preview.png") validatePngEvidence(b);
           return true;
         },
         checks,
@@ -240,7 +235,9 @@ export function validateFiles(
     "model.glb",
     () => {
       glbBytes = scopedFile(root, "model.glb");
-      const expectedHash = manifest?.assetRevision ?? r.modelRevision;
+      const expectedHash = requirePackage
+        ? manifest?.assetRevision
+        : r.modelRevision;
       if (sha256(glbBytes) !== expectedHash)
         throw fail("FILES_INVALID", "Model revision/hash mismatch");
       const info = inspectGlb(glbBytes);
@@ -405,12 +402,10 @@ export function validateFiles(
 function handoff(request, report) {
   const script = path.join(ROOT, "scripts/render-cat-validation.py"),
     scenarioPath = path.join(ROOT, "lib/cat-visual-scenario.json");
-  const scriptHash = fs.existsSync(script)
-    ? sha256(fs.readFileSync(script))
-    : null;
-  const scenario = fs.existsSync(scenarioPath)
-    ? JSON.parse(fs.readFileSync(scenarioPath, "utf8"))
-    : null;
+  const scriptBytes = readBoundedFile(script, 1024 * 1024);
+  const scenarioBytes = readBoundedFile(scenarioPath, 1024 * 1024);
+  const scriptHash = sha256(scriptBytes);
+  const scenario = parseDocument(scenarioBytes);
   return {
     handoffVersion: 1,
     jobId: request.jobId,
@@ -467,7 +462,7 @@ function handoff(request, report) {
     appearance: request.appearance,
     renderContract: {
       path: "lib/cat-visual-scenario.json",
-      sha256: scenario ? sha256(fs.readFileSync(scenarioPath)) : null,
+      sha256: sha256(scenarioBytes),
       scenario,
     },
     requiredOutputs: [
@@ -501,7 +496,7 @@ function persistRun(
     fs.writeFileSync(stored, bytes, { flag: "wx" });
   } catch (e) {
     if (e.code !== "EEXIST") throw e;
-    if (!fs.readFileSync(stored).equals(bytes))
+    if (!readBoundedFile(stored, 4 * 1024 * 1024).equals(bytes))
       throw fail("IO_ERROR", "Job ID already belongs to a different request");
   }
   const runs = noLinks(path.join(dir, "runs"));
@@ -546,13 +541,11 @@ function persistRun(
   return path.relative(base, run);
 }
 export function executeProduction(command, options = {}) {
+  if (!["inspect", "infer", "validate", "preview", "publish"].includes(command))
+    throw fail("INVALID_ARGUMENT", "Unknown production command");
   const dryRun = options.dryRun === true;
   if (command === "inspect" && options.file) {
-    const p = noLinks(options.file),
-      stat = fs.lstatSync(p);
-    if (!stat.isFile() || stat.size > 268435456)
-      throw fail("FILES_INVALID", "Expected GLB under 256 MiB");
-    const bytes = fs.readFileSync(p);
+    const bytes = readBoundedFile(options.file, 268435456);
     return {
       ok: true,
       command,
@@ -574,7 +567,38 @@ export function executeProduction(command, options = {}) {
   if (command === "validate" && options.contract) {
     if (!options.file)
       throw fail("INVALID_ARGUMENT", "--contract requires --file");
-    const parsed = parseContract(options.contract, readDocument(options.file));
+    const fileBytes = readBoundedFile(
+      options.file,
+      4 * 1024 * 1024,
+      "CONTRACT_INVALID",
+    );
+    const parsed = parseContract(options.contract, parseDocument(fileBytes));
+    if (options.taskFile) {
+      if (options.contract !== "local-result")
+        throw fail(
+          "INVALID_ARGUMENT",
+          "--task-file requires local-result validation",
+        );
+      const verification = validateLocalResult({
+        task: readDocument(options.taskFile),
+        result: parsed,
+        inputRoot: options.inputRoot,
+      });
+      const code = verification.valid
+        ? "OK"
+        : verification.errors.some(
+              (error) => error.code === "PRIVATE_ASSETS_MISSING",
+            )
+          ? "PRIVATE_ASSETS_MISSING"
+          : "FILES_INVALID";
+      return {
+        ok: verification.valid,
+        command,
+        dryRun,
+        code,
+        result: verification,
+      };
+    }
     return {
       ok: true,
       command,
@@ -584,18 +608,23 @@ export function executeProduction(command, options = {}) {
         contract: options.contract,
         contractValid: true,
         privateAssetChecks: "unrun",
-        fileSha256: sha256(jsonBytes(parsed)),
+        fileSha256: sha256(fileBytes),
+        canonicalSha256: sha256(jsonBytes(parsed)),
       },
     };
   }
   if (!options.request)
     throw fail("INVALID_ARGUMENT", `${command} requires --request`);
+  // Validate destination even in dry-run; no directories are created here.
+  safeRoot(options.root ?? DEFAULT_ROOT);
   const input = readDocument(options.request);
   let r;
   try {
     r = parseContract("request", input);
   } catch (e) {
     if (
+      input !== null &&
+      typeof input === "object" &&
       typeof input.jobId === "string" &&
       /^job-[a-z0-9][a-z0-9-]{0,62}$/.test(input.jobId)
     ) {
@@ -609,13 +638,13 @@ export function executeProduction(command, options = {}) {
           errors: [{ code: e.code ?? "CONTRACT_INVALID", message: e.message }],
         },
       };
-      persistRun(
+      const execution = persistRun(
         command,
         { jobId: input.jobId, rejectedRequestSha256: sha256(jsonBytes(input)) },
         result,
         options,
       );
-      return result;
+      return { ...result, ...(execution ? { execution } : {}) };
     }
     throw e;
   }
@@ -670,7 +699,10 @@ export function executeProduction(command, options = {}) {
       jobId: r.jobId,
       result:
         command === "preview"
-          ? { validation: report, handoff: handoff(r, report) }
+          ? {
+              validation: report,
+              handoff: parseContract("local-task", handoff(r, report)),
+            }
           : command === "inspect"
             ? {
                 engine: engineStatus,

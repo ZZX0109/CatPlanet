@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { localExecutorSchemas, validateLocalSemantic } from "./local-executor-contracts.mjs";
 export const HASH = z.string().regex(/^[a-f0-9]{64}$/);
 export const ID = z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/);
 export const JOB_ID = z.string().regex(/^job-[a-z0-9][a-z0-9-]{0,62}$/);
@@ -322,6 +323,7 @@ export const schemas = {
   "module-a-morphology": morphologySchema,
   "module-b-coat-pattern": coatPatternSchema,
   "module-c-groom": groomModuleSchema,
+  ...localExecutorSchemas({ HASH, JOB_ID, ID, appearanceSchema, coordinatesSchema, executionBudgetSchema }),
 };
 export function parseContract(kind, value) {
   const schema = schemas[kind];
@@ -340,12 +342,13 @@ export function parseContract(kind, value) {
       { code: "CONTRACT_INVALID" },
     );
   const v = result.data;
+  if (kind === 'local-task' || kind === 'local-result') validateLocalSemantic(kind, v);
   const appearance =
     kind === "request"
       ? v.appearance
       : kind === "appearance"
         ? v
-        : kind === "module-a-morphology"
+        : kind === "module-a-morphology" || kind === "local-task"
           ? v.appearance
           : null;
   if (

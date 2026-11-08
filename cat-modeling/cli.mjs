@@ -8,7 +8,7 @@ import {
   publish,
   DEFAULT_ROOT,
 } from "./pipeline.mjs";
-import { executeProduction, EXIT_CODES } from "./production.mjs";
+import { executeProduction, EXIT_CODES, readDocument } from "./production.mjs";
 export function runCli(argv) {
   const [command, ...args] = argv,
     options = { root: DEFAULT_ROOT, dryRun: false };
@@ -22,6 +22,7 @@ export function runCli(argv) {
       "--engine",
       "--contract",
       "--file",
+      "--task-file",
     ]),
     seen = new Set();
   for (let i = 0; i < args.length; i++) {
@@ -37,13 +38,16 @@ export function runCli(argv) {
         throw Object.assign(Error("Missing value: " + key), {
           code: "INVALID_ARGUMENT",
         });
-      options[key === "--input-root" ? "inputRoot" : key.slice(2)] = args[++i];
+      const option =
+        { "--input-root": "inputRoot", "--task-file": "taskFile" }[key] ??
+        key.slice(2);
+      options[option] = args[++i];
     }
   }
   if (!["inspect", "infer", "validate", "preview", "publish"].includes(command))
     throw Object.assign(
       Error(
-        "Usage: node cat-modeling/cli.mjs inspect|infer|validate|preview|publish [--request file --input-root dir --root jobs --dry-run]. Test fixture requires --engine fixture.",
+        "Usage: node cat-modeling/cli.mjs inspect|infer|validate|preview|publish. See cat-modeling/README.md for mode-specific options. Test fixture requires --engine fixture.",
       ),
       { code: "INVALID_ARGUMENT" },
     );
@@ -58,7 +62,9 @@ export function runCli(argv) {
             ? ["--request"]
             : command === "inspect"
               ? []
-              : ["--task", "--confirm"]),
+              : command === "publish"
+                ? ["--task", "--confirm"]
+                : ["--task"]),
         ])
       : new Set([
           "--root",
@@ -66,8 +72,16 @@ export function runCli(argv) {
           ...(command === "inspect"
             ? ["--request", "--input-root", "--file"]
             : command === "validate"
-              ? ["--request", "--input-root", "--contract", "--file"]
-              : ["--request", "--input-root"]),
+              ? [
+                  "--request",
+                  "--input-root",
+                  "--contract",
+                  "--file",
+                  "--task-file",
+                ]
+              : command === "preview"
+                ? ["--request", "--input-root"]
+                : ["--request"]),
         ]);
   for (const name of optionNames)
     if (!permitted.has(name) && name !== "--engine")
@@ -75,6 +89,15 @@ export function runCli(argv) {
         Error(`Option ${name} does not apply to ${command}`),
         { code: "INVALID_ARGUMENT" },
       );
+  if (
+    seen.has("--root") &&
+    ((command === "inspect" && !options.request) ||
+      (command === "validate" && options.contract))
+  )
+    throw Object.assign(
+      Error("--root applies only to operations with task/run output"),
+      { code: "INVALID_ARGUMENT" },
+    );
   if (options.contract && options.request)
     throw Object.assign(Error("Choose --contract/--file or --request"), {
       code: "INVALID_ARGUMENT",
@@ -87,6 +110,27 @@ export function runCli(argv) {
     throw Object.assign(Error("Choose --file or --request"), {
       code: "INVALID_ARGUMENT",
     });
+  if (
+    options.taskFile &&
+    !(
+      command === "validate" &&
+      options.contract === "local-result" &&
+      options.file
+    )
+  )
+    throw Object.assign(
+      Error("--task-file requires validate --contract local-result --file"),
+      { code: "INVALID_ARGUMENT" },
+    );
+  if (
+    options.inputRoot &&
+    !options.request &&
+    !(options.contract === "local-result" && options.taskFile)
+  )
+    throw Object.assign(
+      Error("--input-root requires --request or local-result with --task-file"),
+      { code: "INVALID_ARGUMENT" },
+    );
   if (options.engine !== undefined && options.engine !== "fixture")
     throw Object.assign(
       Error("No such registered engine; production model is unavailable"),
@@ -105,12 +149,8 @@ export function runCli(argv) {
         throw Object.assign(Error("Fixture infer requires --request"), {
           code: "INVALID_ARGUMENT",
         });
-      if (fs.statSync(options.request).size > 1024 * 1024)
-        throw Object.assign(Error("Request exceeds 1 MiB"), {
-          code: "CONTRACT_INVALID",
-        });
       result = infer(
-        JSON.parse(fs.readFileSync(options.request, "utf8")),
+        readDocument(options.request, { maxBytes: 1024 * 1024 }),
         options,
       );
     } else {
@@ -153,11 +193,13 @@ if (
       EXIT_CODES[error.code] === undefined
         ? error.code === "ENOENT"
           ? "PRIVATE_ASSETS_MISSING"
-          : error.code?.includes("CONTRACT") ||
-              error.code?.includes("TOPOLOGY") ||
-              error.code?.includes("REFERENCE")
-            ? "CONTRACT_INVALID"
-            : "IO_ERROR"
+          : ["GLB_INVALID", "GLB_RESOURCE_LIMIT"].includes(error.code)
+            ? "FILES_INVALID"
+            : error.code?.includes("CONTRACT") ||
+                error.code?.includes("TOPOLOGY") ||
+                error.code?.includes("REFERENCE")
+              ? "CONTRACT_INVALID"
+              : "IO_ERROR"
         : error.code;
     process.stderr.write(
       JSON.stringify(

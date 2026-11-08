@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { creatorControls, defaultCreatorDesign, parseCreatorDesign, serializeCreatorDesign } from '../lib/cat-creator-design';
 import { CAT_RENDERER, creatorDesignContract, defaultCatAssetRuntimeContract, validateCatRendererContract } from '../lib/cat-model-contract';
-import { currentRoomAsset, roomModelAsset, validateRoomModelAsset } from '../lib/room-model-assets';
+import { currentRoomAsset, roomModelAsset, roomAssetValidationStatus, validateRoomModelAsset } from '../lib/room-model-assets';
+import roomRegistry from '../lib/room-model-assets.json';
 import { applyCreatorDesign, creatorTargetWeights, ownCreatorModel, type CreatorModel } from '../lib/cat-creator-model';
 import { inspectCatAssetCapabilities, requiredCreatorFaceTargets, resolveCatBodySurface, validateCatRuntimeCapabilities } from '../lib/cat-asset-capabilities';
 
@@ -21,7 +22,7 @@ test('v3/v4/v5 migrate face and groom values without rewriting asset identity', 
     assert.equal(asset.schemaVersion, 4, 'historical authoring metadata remains untouched');
     assert.equal(asset.assetRevision, asset.sha256);
     assert.equal(asset.topologyVersion, 'norwegian-cat-v1');
-    assert.deepEqual(asset.supportedDesignSchemaVersions, [5]);
+    assert.deepEqual(asset.requiredDesignSchemaVersions, [5]);
     assert.equal(creatorTargetWeights(design).Head_round, .29);
     assert.equal(creatorTargetWeights(design).Shape_headWidth_high, .52);
   }
@@ -239,4 +240,84 @@ test('absent model and unregistered asset produce explicit errors without resett
   assert.throws(() => roomModelAsset('missing-model.glb', defaultCreatorDesign), hasCode('CAT_ASSET_NOT_REGISTERED'));
   assert.equal(serializeCreatorDesign(defaultCreatorDesign), saved);
   assert.throws(() => applyCreatorDesign({ baseId: 'sphynx' } as CreatorModel, defaultCreatorDesign), hasCode('CAT_TOPOLOGY_INCOMPATIBLE'));
+});
+
+const originalRoomArchives = {
+  norwegian: {
+    id: 'norwegian-9ea85df159dd1e06e06919e9e958d385192a9ba10677b0ea62a7833df59bbc66',
+    sha256: '9ea85df159dd1e06e06919e9e958d385192a9ba10677b0ea62a7833df59bbc66', bytes: 16897868,
+  },
+  sphynx: {
+    id: 'sphynx-de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784',
+    sha256: 'de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784', bytes: 23528408,
+  },
+};
+
+test('legacy archive identities remain pinned while all new version fields are explicitly requirements', () => {
+  for (const [base, original] of Object.entries(originalRoomArchives)) {
+    const design = { ...defaultCreatorDesign, coatType: base === 'sphynx' ? 'hairless' as const : 'long' as const };
+    assert.equal(currentRoomAsset(design), original.id);
+    const asset = roomModelAsset(original.id, design);
+    assert.equal(asset.url, `/models/room/${original.id}.glb`);
+    assert.equal(asset.sha256, original.sha256);
+    assert.equal(asset.assetRevision, original.sha256);
+    assert.equal(asset.bytes, original.bytes);
+    assert.equal(asset.schemaVersion, 4);
+    assert.equal(Object.hasOwn(asset, 'supportedDesignSchemaVersions'), false, 'no metadata-only assertion of actual v5 support');
+    assert.deepEqual(asset.requiredDesignSchemaVersions, [5]);
+    assert.equal(asset.validationEvidence.status, 'unverified');
+    assert.equal(asset.validationEvidence.binaryStatus, 'not-provided');
+    assert.equal(asset.validationEvidence.declarationScope, 'load-requirements-only');
+    assert.equal(asset.validationEvidence.validatedSha256, null);
+    assert.deepEqual(asset.validationEvidence.verifiedDesignSchemaVersions, []);
+    assert.equal(asset.validationEvidence.verifiedTopologyVersion, null);
+    assert.equal(asset.validationEvidence.verifiedGroomSchemaVersion, null);
+    assert.deepEqual(asset.validationEvidence.verifiedRendererVersions, []);
+    assert.equal(asset.validationEvidence.localValidationReport, null);
+  }
+});
+
+test('forged legacy validation metadata cannot certify old v5 binaries or bypass actual runtime checks', () => {
+  const design = parseCreatorDesign({ schemaVersion: 4, templateId: 'cat-foundation-v1', coatType: 'long', shape });
+  const asset = structuredClone(roomModelAsset(currentRoomAsset(design), design));
+  const forged = asset as unknown as { validationEvidence: Record<string, unknown> };
+  forged.validationEvidence = { ...asset.validationEvidence, status: 'passed', binaryStatus: 'verified',
+    validatedSha256: asset.sha256, verifiedDesignSchemaVersions: [5], verifiedRendererVersions: [1], localValidationReport: 'invented.json' };
+  const status = roomAssetValidationStatus(asset);
+  assert.equal(status.status, 'unverified');
+  assert.equal(status.binaryEvidence, 'not-provided');
+  assert.equal(status.validatedSha256, null);
+  assert.deepEqual(status.verifiedDesignSchemaVersions, []);
+  assert.ok(status.requiredLocalChecks.every(check => check.status === 'unrun'));
+  const { scene, body } = runtimeScene();
+  delete body.morphTargetDictionary!.Shape_headWidth_high;
+  assert.throws(() => validateCatRuntimeCapabilities(scene, [], 'norwegian', design, asset), hasCode('CAT_ASSET_CAPABILITY_MISSING'));
+});
+
+test('synthetic scene success and old account shape restoration never upgrade archive evidence', () => {
+  const registryBefore = JSON.stringify(roomRegistry);
+  const { scene } = runtimeScene();
+  const pinned = originalRoomArchives.norwegian.id;
+  for (const version of [3, 4, 5]) {
+    const storedAccount = { appearanceAsset: pinned, appearance: {
+      schemaVersion: version, templateId: version === 3 ? 'norwegian-cat-v1' : 'cat-foundation-v1',
+      ...(version === 3 ? {} : { coatType: 'long', coatMode: 'source' }), shape,
+    } };
+    const storedBefore = JSON.stringify(storedAccount);
+    const restored = parseCreatorDesign(JSON.parse(storedBefore).appearance);
+    const asset = roomModelAsset(storedAccount.appearanceAsset, restored);
+    assert.deepEqual(restored.shape, shape);
+    assert.equal(validateCatRuntimeCapabilities(scene, [], 'norwegian', restored, asset).evidence, 'runtime-scene');
+    const status = roomAssetValidationStatus(asset);
+    assert.equal(status.status, 'unverified', 'the synthetic scene has different bytes from the pinned archive');
+    assert.equal(status.assetRevision, originalRoomArchives.norwegian.sha256);
+    assert.equal(status.validatedSha256, null);
+    assert.deepEqual(status.requiredLocalChecks.map(check => check.id), [
+      'archived-bytes-sha256', 'v3-v4-v5-appearance-values', 'body-surface-multi-primitive',
+      'morph-dense-sparse-and-blink', 'rig-material-groom-pose', 'reload-and-old-account-restore',
+    ]);
+    assert.ok(status.requiredLocalChecks.every(check => check.status === 'unrun'));
+    assert.equal(JSON.stringify(storedAccount), storedBefore, 'restoration does not mutate the persisted sample');
+  }
+  assert.equal(JSON.stringify(roomRegistry), registryBefore, 'runtime observations do not rewrite registry evidence');
 });

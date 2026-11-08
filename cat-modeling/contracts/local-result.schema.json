@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "resultVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "jobId": {
+      "type": "string",
+      "pattern": "^job-[a-z0-9][a-z0-9-]{0,62}$"
+    },
+    "taskSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "requestSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "failed",
+        "blocked"
+      ]
+    },
+    "returnMode": {
+      "type": "string",
+      "enum": [
+        "metadata-only",
+        "authorized-evidence"
+      ]
+    },
+    "authorization": {
+      "type": "object",
+      "properties": {
+        "localExecutionApproved": {
+          "type": "boolean"
+        },
+        "evidenceReturnApproved": {
+          "type": "boolean"
+        },
+        "evidenceRef": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "localExecutionApproved",
+        "evidenceReturnApproved",
+        "evidenceRef"
+      ],
+      "additionalProperties": false
+    },
+    "tool": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "const": "blender"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "sha256Before": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sha256After": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authorizationEvidence": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "sha256Before",
+        "sha256After",
+        "authorizationEvidence"
+      ],
+      "additionalProperties": false
+    },
+    "scriptSha256": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "scenarioSha256": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "commandExecuted": {
+          "type": "boolean"
+        },
+        "exitCode": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 255
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timedOut": {
+          "type": "boolean"
+        },
+        "elapsedSeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "failureStage": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "planning",
+                "load",
+                "render",
+                "export",
+                "transfer"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "commandExecuted",
+        "exitCode",
+        "timedOut",
+        "elapsedSeconds",
+        "failureStage"
+      ],
+      "additionalProperties": false
+    },
+    "artifacts": {
+      "maxItems": 5,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "front.png",
+              "three.png",
+              "side.png",
+              "validation.json",
+              "execution.log"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 33554432
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "bytes"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "passed",
+              "failed",
+              "missing",
+              "blocked",
+              "unrun"
+            ]
+          },
+          "details": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "state",
+          "details"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "limitations": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "resultVersion",
+    "jobId",
+    "taskSha256",
+    "requestSha256",
+    "state",
+    "returnMode",
+    "authorization",
+    "tool",
+    "source",
+    "scriptSha256",
+    "scenarioSha256",
+    "execution",
+    "artifacts",
+    "checks",
+    "limitations"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:miaoxing:cat-modeling:contracts:local-result:1"
+}

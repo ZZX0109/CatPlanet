@@ -1,0 +1,557 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "handoffVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "jobId": {
+      "type": "string",
+      "pattern": "^job-[a-z0-9][a-z0-9-]{0,62}$"
+    },
+    "executor": {
+      "type": "string",
+      "const": "miaoxing-local-blender"
+    },
+    "operation": {
+      "type": "string",
+      "const": "render-fixed-preview"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "blocked-missing-or-invalid-assets",
+        "awaiting-authorized-local-source"
+      ]
+    },
+    "invokeInCloud": {
+      "type": "boolean",
+      "const": false
+    },
+    "requiredExecutable": {
+      "type": "string",
+      "const": "blender"
+    },
+    "expectedTool": {
+      "type": "object",
+      "properties": {
+        "requiredBlenderVersion": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "versionResolution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "unresolved",
+            "resolved"
+          ]
+        },
+        "templateId": {
+          "type": "string",
+          "const": "cat-foundation-v1"
+        },
+        "topologyVersion": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+        }
+      },
+      "required": [
+        "requiredBlenderVersion",
+        "versionResolution",
+        "state",
+        "templateId",
+        "topologyVersion"
+      ],
+      "additionalProperties": false
+    },
+    "command": {
+      "type": "object",
+      "properties": {
+        "executable": {
+          "type": "string",
+          "const": "blender"
+        },
+        "argv": {
+          "minItems": 10,
+          "maxItems": 32,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "shell": {
+          "type": "boolean",
+          "const": false
+        },
+        "argvIsIllustrative": {
+          "type": "boolean",
+          "const": true
+        },
+        "substitutionsRequireLocalValidation": {
+          "type": "boolean",
+          "const": true
+        }
+      },
+      "required": [
+        "executable",
+        "argv",
+        "shell",
+        "argvIsIllustrative",
+        "substitutionsRequireLocalValidation"
+      ],
+      "additionalProperties": false
+    },
+    "requiredLocalInputs": {
+      "minItems": 1,
+      "maxItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "approved-source.blend"
+          },
+          "state": {
+            "type": "string",
+            "const": "missing-unverified"
+          },
+          "sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "authorization": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name",
+          "state",
+          "sha256",
+          "authorization"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "script": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "const": "scripts/render-cat-validation.py"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "requestSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "assetRevision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "coordinates": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "type": "string",
+          "const": "meter"
+        },
+        "handedness": {
+          "type": "string",
+          "const": "right"
+        },
+        "up": {
+          "type": "string",
+          "const": "+Y"
+        },
+        "forward": {
+          "type": "string",
+          "const": "+Z"
+        },
+        "origin": {
+          "type": "string",
+          "const": "floor-center"
+        }
+      },
+      "required": [
+        "units",
+        "handedness",
+        "up",
+        "forward",
+        "origin"
+      ],
+      "additionalProperties": false
+    },
+    "executionBudget": {
+      "type": "object",
+      "properties": {
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "maxMemoryMiB": {
+          "type": "integer",
+          "minimum": 128,
+          "maximum": 65536
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "cpu",
+            "gpu",
+            "auto"
+          ]
+        },
+        "maxGpuMemoryMiB": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 49152
+        }
+      },
+      "required": [
+        "timeoutSeconds",
+        "maxMemoryMiB",
+        "device",
+        "maxGpuMemoryMiB"
+      ],
+      "additionalProperties": false
+    },
+    "appearance": {
+      "type": "object",
+      "properties": {
+        "designSchemaVersion": {
+          "type": "number",
+          "const": 5
+        },
+        "templateId": {
+          "type": "string",
+          "const": "cat-foundation-v1"
+        },
+        "coatType": {
+          "type": "string",
+          "enum": [
+            "long",
+            "short",
+            "hairless"
+          ]
+        },
+        "coatMode": {
+          "type": "string",
+          "enum": [
+            "source",
+            "groom"
+          ]
+        },
+        "shape": {
+          "type": "object",
+          "properties": {
+            "headRound": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "headWedge": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "headWidth": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "headDepth": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "cheeks": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "jaw": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "muzzle": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "muzzleWidth": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "noseBridge": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "eyeSize": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "eyeSpacing": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "eyeTilt": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "earSize": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "earTilt": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "headFurDensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "headFurLength": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "ruffFurDensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "ruffFurLength": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "bodyFurDensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "bodyFurLength": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "headRound",
+            "headWedge",
+            "headWidth",
+            "headDepth",
+            "cheeks",
+            "jaw",
+            "muzzle",
+            "muzzleWidth",
+            "noseBridge",
+            "eyeSize",
+            "eyeSpacing",
+            "eyeTilt",
+            "earSize",
+            "earTilt",
+            "headFurDensity",
+            "headFurLength",
+            "ruffFurDensity",
+            "ruffFurLength",
+            "bodyFurDensity",
+            "bodyFurLength"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "designSchemaVersion",
+        "templateId",
+        "coatType",
+        "coatMode",
+        "shape"
+      ],
+      "additionalProperties": false
+    },
+    "renderContract": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "const": "lib/cat-visual-scenario.json"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scenario": {
+          "anyOf": [
+            {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "scenario"
+      ],
+      "additionalProperties": false
+    },
+    "requiredOutputs": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "string",
+          "const": "front.png"
+        },
+        {
+          "type": "string",
+          "const": "three.png"
+        },
+        {
+          "type": "string",
+          "const": "side.png"
+        },
+        {
+          "type": "string",
+          "const": "validation.json"
+        }
+      ],
+      "items": false,
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "requiredEvidence": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "passed",
+              "failed",
+              "missing",
+              "blocked",
+              "unrun"
+            ]
+          },
+          "details": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "state",
+          "details"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "handoffVersion",
+    "jobId",
+    "executor",
+    "operation",
+    "state",
+    "invokeInCloud",
+    "requiredExecutable",
+    "expectedTool",
+    "command",
+    "requiredLocalInputs",
+    "script",
+    "requestSha256",
+    "assetRevision",
+    "coordinates",
+    "executionBudget",
+    "appearance",
+    "renderContract",
+    "requiredOutputs",
+    "requiredEvidence",
+    "checks"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:miaoxing:cat-modeling:contracts:local-task:1"
+}

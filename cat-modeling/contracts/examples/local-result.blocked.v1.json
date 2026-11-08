@@ -1,0 +1,42 @@
+{
+  "resultVersion": 1,
+  "jobId": "job-example-local-edit",
+  "taskSha256": "d9974d9d337ec7211b08a13e0180e7cd574680c0df8a57d6f4ac35164f1fea8a",
+  "requestSha256": "025398c1875ddf1287966392a4d3cf578fea8ede174c200f768bfb4fef05705a",
+  "state": "blocked",
+  "returnMode": "metadata-only",
+  "authorization": {
+    "localExecutionApproved": false,
+    "evidenceReturnApproved": false,
+    "evidenceRef": null
+  },
+  "tool": {
+    "name": "blender",
+    "version": null
+  },
+  "source": {
+    "sha256Before": null,
+    "sha256After": null,
+    "authorizationEvidence": null
+  },
+  "scriptSha256": "1250bc22e5e316866aa0379a4ec020f83fb9a2f80361540fea342367ae01704d",
+  "scenarioSha256": "ea16f1337a64623b51d7ebce1bbe2da7c31d339ad1161decbf00986266e5bba6",
+  "execution": {
+    "commandExecuted": false,
+    "exitCode": null,
+    "timedOut": false,
+    "elapsedSeconds": 0,
+    "failureStage": "planning"
+  },
+  "artifacts": [],
+  "checks": [
+    {
+      "name": "private-source",
+      "state": "missing",
+      "details": "Example only; authorized local source has not been supplied"
+    }
+  ],
+  "limitations": [
+    "No Blender execution, tool compatibility, private asset or visual acceptance has been established"
+  ]
+}

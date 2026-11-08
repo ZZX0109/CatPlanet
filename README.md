@@ -12,6 +12,8 @@
 
 ### 猫咪建模云端工程入口
 
+本轮交付状态、实际测试证据和本地所需文件见 [CLOUD_READY_FOR_LOCAL_INTEGRATION.md](./CLOUD_READY_FOR_LOCAL_INTEGRATION.md)。本地执行与回传操作见 [Blender 协议](./cat-modeling/LOCAL-BLENDER-EXECUTOR.md)。
+
 新增 [统一 CLI 与协议](./cat-modeling/README.md)、[机器可读任务契约](./cat-modeling/contracts/) 和 [Codex Skill](./.agents/skills/miaoxing-cat-model/SKILL.md)。现有造型室保留；外观设计、资产哈希/拓扑、groom、渲染器兼容和实际能力分别验证。旧 v3/v4 外观经原解析器迁移至 v5，旧资产 ID/哈希和历史存档保留。
 
 云端支持契约、GLB 静态检查、授权元数据检查、独立任务和本地执行器交接。**未配置生产模型时，infer 明确返回不可用**；原创几何 fixture 只供公开回归，不能称为照片转三维、猫专用 AI 或真实母模验收。A 形态、B 毛色花纹、C 毛流/长度/密度的预测模块采用独立版本接口，当前没有权重、合法训练集或 GPU 服务。训练和 GPU 推理不运行在 Next.js 请求进程。

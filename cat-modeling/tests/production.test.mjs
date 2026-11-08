@@ -394,10 +394,11 @@ function outputPackage(t) {
 test("full output validation requires a manifest and validates all actual output hashes/contracts", (t) => {
   const p = prepared(t);
   let report = validateFiles(p.r, { inputRoot: p.root, requirePackage: true });
-  assert.notEqual(report.state, "valid");
+  assert.equal(report.state, "missing-private-assets");
+  assert.equal(report.errors[0].code, "PRIVATE_ASSETS_MISSING");
   assert(
     report.checks.some(
-      (c) => c.name === "manifest-contract" && c.state === "failed",
+      (c) => c.name === "manifest-contract" && c.state === "missing",
     ),
   );
   const complete = outputPackage(t);

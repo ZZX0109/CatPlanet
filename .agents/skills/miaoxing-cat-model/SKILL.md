@@ -23,20 +23,23 @@ node cat-modeling/cli.mjs inspect
 node cat-modeling/cli.mjs inspect --file <获准本地审查的model.glb> --dry-run
 node cat-modeling/cli.mjs validate --contract request --file <request.json> --dry-run
 node cat-modeling/cli.mjs preview --request <request.json> --input-root <隔离输入目录> --dry-run
+node cat-modeling/cli.mjs validate --contract local-task --file <blender-task.json> --dry-run
+node cat-modeling/cli.mjs validate --contract local-result --file <local-result.json> --task-file <blender-task.json> --dry-run
+# 仅在已获准回传的证据文件位于本机目录时，为上一条追加 --input-root <证据目录>
 ```
 
 纯协议校验不读取私有模型；完整输出校验使用 `validate --request ... --input-root ...` 并要求 manifest 及全部产物。不要用协议结构通过或源模型 inspect 来替代完整交付包检查。错误码、stderr JSON 和检查状态必须保留；修复输入问题后重试使用新请求/新 jobId，不能编辑旧日志消除失败。
 
 - `infer` 是未来生产模型入口。没有已登记模型/权重/执行器时必须保留 `MODEL_UNAVAILABLE`，不能用随机数据、fixture 或虚假“AI 权重”替代。原创 fixture 必须显式选择，且结果始终注明工程测试用途，不导入现有房间。
-- `inspect` 只检查真实可读取模型的结构/哈希/坐标/能力。`validate` 区分 JSON 合法、文件完整、能力匹配与人工视觉验收；静态合法不代表私有猫的骨架/毛发/动作已通过。
+- `inspect` 只检查真实可读取模型的结构、哈希、坐标声明和可观察能力；实测尺寸、落地与解剖朝向仍未验证。`validate` 区分 JSON 合法、文件完整、能力匹配与人工视觉验收；静态合法不代表私有猫的骨架/毛发/动作已通过。
 - `preview` 在云端只生成/描述受控本地执行器任务。没有 Blender 时不安装未经确认的作者插件，不执行任意脚本或 shell 字符串；任务状态保留等待本地证据。使用既有固定操作与参数数组，不能将任务计划当作已生成预览。
-- 每项实际任务使用全新隔离目录和 jobId，保留输入摘要、标准错误码与执行日志。dry-run 不写目录/产物。失败不覆盖任务，不把私人参考图上传外部，不修改生产数据库。
+- 每个新请求使用隔离目录和独立 jobId；相同不可变请求可重复检查并新增独立 run，不能用旧 jobId 保存不同输入。保留输入摘要、标准错误码与执行日志。dry-run 不写目录/产物。失败不覆盖任务，不把私人参考图上传外部，不修改生产数据库。
 
 运行 `npm run test:cat-modeling`、`npm run test:cat-modeling:browser`、类型检查与必要构建。只运行与变化相关且环境支持的测试；私有资产缺失时如实报告 blocked，不能用公开 fixture 或零测试结果代替真实集成验收。
 
 ## 本地 Blender 证据
 
-只向获准的本地执行器交接标准任务。收回后核对 jobId、请求/输入/输出摘要、工具版本、退出码和日志；原文件执行前后摘要保持不变。固定相机、灯光、设计、姿态与时间，对比 Blender、造型室、GLB 回读、房间，分别报告毛发/材质/骨架/形变差异。原生 Blender Hair Curves 和 Cycles closure 不是 GLB 默认支持；静态毛导出也不证明动画绑定合格。缺阶段、未运行和人工批准必须分别记录。
+只向获准的本地执行器交接标准任务。先用 `validate --contract local-task --file` 检查任务；本地返回后使用 `validate --contract local-result --file ... --task-file ...` 核对任务与结果，只有 `returnMode: authorized-evidence` 才通过 `--input-root` 读取获准回传的证据。纯协议校验或 `metadata-accepted-unverified` 不证明文件已回传；证据摘要一致也不等于视觉、许可或生产集成验收，必须保留 `approved:false` 和待验项目。收回后核对 jobId、请求/输入/输出摘要、工具版本、退出码和日志；原文件执行前后摘要保持不变。固定相机、灯光、设计、姿态与时间，对比 Blender、造型室、GLB 回读、房间，分别报告毛发/材质/骨架/形变差异。原生 Blender Hair Curves 和 Cycles closure 不是 GLB 默认支持；静态毛导出也不证明动画绑定合格。缺阶段、未运行和人工批准必须分别记录。
 
 ## 发布与数据保护
 

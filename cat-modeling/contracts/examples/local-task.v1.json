@@ -1,0 +1,219 @@
+{
+  "handoffVersion": 1,
+  "jobId": "job-example-local-edit",
+  "executor": "miaoxing-local-blender",
+  "operation": "render-fixed-preview",
+  "state": "blocked-missing-or-invalid-assets",
+  "invokeInCloud": false,
+  "requiredExecutable": "blender",
+  "expectedTool": {
+    "requiredBlenderVersion": null,
+    "versionResolution": "Must resolve exact supported version from authorized local source/manifest before execution",
+    "state": "unresolved",
+    "templateId": "cat-foundation-v1",
+    "topologyVersion": "norwegian-cat-v1"
+  },
+  "command": {
+    "executable": "blender",
+    "argv": [
+      "--background",
+      "--disable-autoexec",
+      "--threads",
+      "2",
+      "<approved-source.blend>",
+      "--python-exit-code",
+      "1",
+      "--python",
+      "<repository>/scripts/render-cat-validation.py",
+      "--",
+      "--design",
+      "<isolated-job>/appearance.json",
+      "--output",
+      "<repository>/artifacts/local-preview-job-example-local-edit"
+    ],
+    "shell": false,
+    "argvIsIllustrative": true,
+    "substitutionsRequireLocalValidation": true
+  },
+  "requiredLocalInputs": [
+    {
+      "name": "approved-source.blend",
+      "state": "missing-unverified",
+      "sha256": null,
+      "authorization": "must be checked locally before execution"
+    }
+  ],
+  "script": {
+    "path": "scripts/render-cat-validation.py",
+    "sha256": "1250bc22e5e316866aa0379a4ec020f83fb9a2f80361540fea342367ae01704d"
+  },
+  "requestSha256": "025398c1875ddf1287966392a4d3cf578fea8ede174c200f768bfb4fef05705a",
+  "assetRevision": null,
+  "coordinates": {
+    "units": "meter",
+    "handedness": "right",
+    "up": "+Y",
+    "forward": "+Z",
+    "origin": "floor-center"
+  },
+  "executionBudget": {
+    "timeoutSeconds": 300,
+    "maxMemoryMiB": 4096,
+    "device": "cpu",
+    "maxGpuMemoryMiB": 0
+  },
+  "appearance": {
+    "designSchemaVersion": 5,
+    "templateId": "cat-foundation-v1",
+    "coatType": "long",
+    "coatMode": "groom",
+    "shape": {
+      "headRound": 0,
+      "headWedge": 0,
+      "headWidth": 50,
+      "headDepth": 50,
+      "cheeks": 50,
+      "jaw": 50,
+      "muzzle": 50,
+      "muzzleWidth": 50,
+      "noseBridge": 50,
+      "eyeSize": 50,
+      "eyeSpacing": 50,
+      "eyeTilt": 50,
+      "earSize": 50,
+      "earTilt": 50,
+      "headFurDensity": 80,
+      "headFurLength": 55,
+      "ruffFurDensity": 80,
+      "ruffFurLength": 70,
+      "bodyFurDensity": 80,
+      "bodyFurLength": 65
+    }
+  },
+  "renderContract": {
+    "path": "lib/cat-visual-scenario.json",
+    "sha256": "ea16f1337a64623b51d7ebce1bbe2da7c31d339ad1161decbf00986266e5bba6",
+    "scenario": {
+      "scenarioVersion": 1,
+      "id": "cat-neutral-review-v1",
+      "width": 768,
+      "height": 768,
+      "normalizedHeight": 2,
+      "camera": {
+        "type": "orthographic",
+        "span": 3.4,
+        "near": 0.01,
+        "far": 100,
+        "target": [
+          0,
+          1,
+          0
+        ]
+      },
+      "views": {
+        "front": [
+          0,
+          1,
+          7
+        ],
+        "three": [
+          5,
+          2.3,
+          6
+        ],
+        "side": [
+          7,
+          1,
+          0
+        ]
+      },
+      "background": "#dedad2",
+      "ambient": 0.15,
+      "lights": [
+        {
+          "position": [
+            -3,
+            4,
+            5
+          ],
+          "color": "#fff9f0",
+          "intensity": 1.8
+        },
+        {
+          "position": [
+            4,
+            1,
+            2
+          ],
+          "color": "#e6efff",
+          "intensity": 0.45
+        },
+        {
+          "position": [
+            0,
+            3,
+            -4
+          ],
+          "color": "#fff8e9",
+          "intensity": 1.2
+        }
+      ],
+      "pose": "stand",
+      "blink": 0,
+      "animationTime": 0,
+      "colorManagement": "sRGB output; no tone mapping; exposure 1",
+      "groom": "web generated geometry; Blender native curves require separate evidence, never assumed GLB portable"
+    }
+  },
+  "requiredOutputs": [
+    "front.png",
+    "three.png",
+    "side.png",
+    "validation.json"
+  ],
+  "requiredEvidence": [
+    "exact Blender version",
+    "render script hash",
+    "input/output SHA-256",
+    "actual bodySurface selection",
+    "morph/rig/material/groom observations",
+    "missing capabilities explicitly marked"
+  ],
+  "checks": [
+    {
+      "name": "request-contract",
+      "state": "passed",
+      "details": "Strict request structure and semantic constraints checked"
+    },
+    {
+      "name": "license-declaration",
+      "state": "passed",
+      "details": "Caller declares verified local-review authorization; independent legal verification is unrun"
+    },
+    {
+      "name": "license-evidence-review",
+      "state": "unrun",
+      "details": "No automated claim that consent evidence or third-party terms were independently reviewed"
+    },
+    {
+      "name": "model.glb",
+      "state": "missing",
+      "details": "Private/local artifact is absent"
+    },
+    {
+      "name": "coordinate-semantics",
+      "state": "unrun",
+      "details": "Finite transform/accessor checks do not measure world bounds, floor alignment or anatomical forward direction"
+    },
+    {
+      "name": "visual-acceptance",
+      "state": "unrun",
+      "details": "No private-asset render or visual acceptance was executed by this CLI"
+    },
+    {
+      "name": "rig-animation-semantics",
+      "state": "unrun",
+      "details": "Structural node/clip names do not prove animation or face-control compatibility"
+    }
+  ]
+}

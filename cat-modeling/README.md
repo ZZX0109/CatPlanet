@@ -36,7 +36,7 @@ node --test cat-modeling/tests/*.test.mjs
 
 局部编辑和拟合可产出新 appearance 值；输出仍必须满足同一模板与 designSchemaVersion，不能将不同拓扑参数套用旧资产。manifest 的许可不能比请求自报的权限扩大。自报 `verified` 只代表调用者提供了合法声明，独立授权证据审阅仍标为 `unrun`。
 
-GLB 检查器验证二进制长度、嵌入资源、accessor 范围、有限值、primitive/index/morph 引用、三角网格资源、节点变换与树结构、皮肤引用和纹理摘要；拒绝目前未支持的 sparse accessor、外部纹理和非三角 primitive。它不是完整 Khronos conformance validator，不会从名字推断骨骼/动画/眼控语义；不会从米制/Y-up 字段推断真实解剖朝向、落地或实测尺寸。这些项目以及实际材质／毛发／视觉审查始终分别标 `unrun`，不存在“私有素材检查通过”的替代结论。
+GLB 检查器验证二进制长度、嵌入资源、accessor 范围、有限值、primitive/index/morph 引用、三角网格资源、节点变换与树结构、皮肤引用和纹理摘要；支持标准 sparse accessor、隐式全零与 dense+稀疏覆盖；拒绝外部纹理和非三角 primitive。它不是完整 Khronos conformance validator，不会从名字推断骨骼/动画/眼控语义；不会从米制/Y-up 字段推断真实解剖朝向、落地或实测尺寸。这些项目以及实际材质／毛发／视觉审查始终分别标 `unrun`，不存在“私有素材检查通过”的替代结论。
 
 ### 隔离、日志和本地交接
 
@@ -68,3 +68,5 @@ node cat-modeling/cli.mjs publish --engine fixture \
 相同 fixture 请求产生相同 task ID 和 GLB 字节；已有任务拒绝覆盖。它写入 request、appearance、model、groom、manifest、validation；preview 的 SVG 是实际 GLB 顶点的固定斜视诊断投影，不是物理毛发／材质视觉验收。`assetRevision` 是 GLB 字节 SHA-256，`topologyVersion` 标识几何契约，`groomSchemaVersion` 与参数版本独立。
 
 fixture 的 `publish` 仍仅为 `jobs/releases/<taskId>/` 的独立暂存。每次重新校验可信确定性引擎输出，拒绝篡改的几何、许可、伪造 validation；真正暂存还需要在展示具体任务、目标、预览限制并取得用户明确批准后传入 dry-run 中的精确确认令牌。代理自己算出令牌不等于用户同意。暂存绝不更新当前模型、网站或数据库；生产发布仍不可用。只有本次原创 fixture 几何按 [CC0 声明](FIXTURE-LICENSE.md) 使用，不能把该许可套给 Norwegian、Sphynx、原 Blender 或用户照片。未知授权素材只做受限本地审查，禁止训练和公共分发。
+
+本地任务和回传的精确协议见 [LOCAL-BLENDER-EXECUTOR.md](LOCAL-BLENDER-EXECUTOR.md)。初始计划、元数据回传、授权文件完整性与真实视觉批准是不同状态；不能互相替代。

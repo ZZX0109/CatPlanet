@@ -18,9 +18,6 @@
       "assetRevision": "9ea85df159dd1e06e06919e9e958d385192a9ba10677b0ea62a7833df59bbc66",
       "topologyVersion": "norwegian-cat-v1",
       "groomSchemaVersion": 1,
-      "supportedDesignSchemaVersions": [
-        5
-      ],
       "rendererCompatibility": {
         "contractVersion": 1,
         "rendererId": "miaoxing-three-cat",
@@ -41,6 +38,30 @@
           "groom-surface-v1",
           "blink-correctives-v1"
         ]
+      },
+      "requiredDesignSchemaVersions": [
+        5
+      ],
+      "validationEvidence": {
+        "format": 1,
+        "status": "unverified",
+        "binaryStatus": "not-provided",
+        "auditContext": "cloud-public-checkout",
+        "declarationScope": "load-requirements-only",
+        "requirementFields": [
+          "requiredDesignSchemaVersions",
+          "topologyVersion",
+          "groomSchemaVersion",
+          "rendererCompatibility",
+          "capabilities"
+        ],
+        "validatedSha256": null,
+        "verifiedDesignSchemaVersions": [],
+        "verifiedTopologyVersion": null,
+        "verifiedGroomSchemaVersion": null,
+        "verifiedRendererVersions": [],
+        "localValidationReport": null,
+        "reason": "Private immutable archived GLB and approved local comparison evidence were not provided. Requirements permit a guarded load attempt; they do not establish compatibility."
       }
     },
     "sphynx-de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784": {
@@ -56,9 +77,6 @@
       "assetRevision": "de29f2f3df0f5d988a898fcfe41489b2fb5ad6dcd25c193d673cbc6a2b7cd784",
       "topologyVersion": "sphynx-cat-v1",
       "groomSchemaVersion": 1,
-      "supportedDesignSchemaVersions": [
-        5
-      ],
       "rendererCompatibility": {
         "contractVersion": 1,
         "rendererId": "miaoxing-three-cat",
@@ -79,6 +97,30 @@
           "groom-surface-v1",
           "blink-correctives-v1"
         ]
+      },
+      "requiredDesignSchemaVersions": [
+        5
+      ],
+      "validationEvidence": {
+        "format": 1,
+        "status": "unverified",
+        "binaryStatus": "not-provided",
+        "auditContext": "cloud-public-checkout",
+        "declarationScope": "load-requirements-only",
+        "requirementFields": [
+          "requiredDesignSchemaVersions",
+          "topologyVersion",
+          "groomSchemaVersion",
+          "rendererCompatibility",
+          "capabilities"
+        ],
+        "validatedSha256": null,
+        "verifiedDesignSchemaVersions": [],
+        "verifiedTopologyVersion": null,
+        "verifiedGroomSchemaVersion": null,
+        "verifiedRendererVersions": [],
+        "localValidationReport": null,
+        "reason": "Private immutable archived GLB and approved local comparison evidence were not provided. Requirements permit a guarded load attempt; they do not establish compatibility."
       }
     }
   }

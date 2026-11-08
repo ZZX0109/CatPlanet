@@ -136,7 +136,7 @@ A/B/C 交付均先停留隔离任务目录。合并结果的 manifest 记录各�
 
 本轮执行日志保存在被忽略的 `artifacts/cat-modeling-cloud-review/`；示例生产拒绝/交接任务位于 `cat-modeling/jobs/job-example-local-edit/runs/`。它们只含公开样本与执行记录，没有用户照片/生产数据，不是训练集。正式仓库提交包含规范和测试，不包含这些运行输出。
 
-复核发现并已修复：完整包缺 manifest 被漏检、输出能力/许可/拓扑声明与实物矛盾、输出 groom 三角形越界、动画 accessor/channel 及材质引用非法、重复骨骼名称绕过预算、跨语言 schema ID 冲突。对应负例均纳入回归。静态检查器明确拒绝目前未支持的 sparse accessor、外部资源和非三角 primitive；这不等同于完整 Khronos 验证，不能据此给实际毛发/动作视觉签字。
+复核发现并已修复：完整包缺 manifest 被漏检、输出能力/许可/拓扑声明与实物矛盾、输出 groom 三角形越界、动画 accessor/channel 及材质引用非法、重复骨骼名称绕过预算、跨语言 schema ID 冲突。对应负例均纳入回归。本轮已补齐标准 sparse accessor、隐式全零与稀疏覆盖；静态检查器继续拒绝外部资源和非三角 primitive；这不等同于完整 Khronos 验证，不能据此给实际毛发/动作视觉签字。
 
 ### 变更入口
 
