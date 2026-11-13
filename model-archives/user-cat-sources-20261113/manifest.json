@@ -1,0 +1,161 @@
+[
+  {
+    "file": "kitten-source.zip",
+    "bytes": 12944941,
+    "sha256": "321f0aa435478f2719b283fa1ae911a7793027d99b3b247c1d9d052b86139640",
+    "provenance": "Baidu Netdisk download recorded in docs/USER-CAT-MODELS.md; repackaged without .DS_Store",
+    "license": "Author and redistribution permission not verified; no new license granted",
+    "members": [
+      {
+        "path": "kitten/source/Kitten.glb",
+        "bytes": 7109324,
+        "sha256": "ef8c856e13b7351a373abfbf485966fdd48d3829539cc5863d924f6100ca6e4c"
+      },
+      {
+        "path": "kitten/textures/Kitten_Albedo_1.jpeg",
+        "bytes": 1846244,
+        "sha256": "f50f46b73a444cf5f500d251fdbe41858a1a31abb4d5cca19106b9c6da446b0c"
+      },
+      {
+        "path": "kitten/textures/Kitten_Gloss_2@channels=B.jpeg",
+        "bytes": 1004345,
+        "sha256": "577a1f377987bcc3ae8411698806eb527b8927b9986602160fd44b80375d9b36"
+      },
+      {
+        "path": "kitten/textures/Kitten_Gloss_2@channels=G.jpeg",
+        "bytes": 1002088,
+        "sha256": "059d16f03a14d7a6e0cd3a746072b84edf8e83c80d2d36e63c6b3fe266d0f894"
+      },
+      {
+        "path": "kitten/textures/Kitten_Normal_0.png",
+        "bytes": 3331747,
+        "sha256": "0accc4f1a383b0cc6f83fc45cb455fde95be4a7f963f3f39d7f45c4da3e4cbbf"
+      }
+    ]
+  },
+  {
+    "file": "persian-source.zip",
+    "bytes": 20263405,
+    "sha256": "0040bcfd51926bf3f0a62a7b9f3bf1b89105d0783a95060904568fa7f41e051f",
+    "provenance": "Baidu Netdisk download recorded in docs/USER-CAT-MODELS.md; repackaged without .DS_Store",
+    "license": "Author and redistribution permission not verified; no new license granted",
+    "members": [
+      {
+        "path": "persian/source/Persian.glb",
+        "bytes": 9694584,
+        "sha256": "97c58b22c45755c2719cf511f093b96031f5012aa8719d1d9677a42a93e83823"
+      },
+      {
+        "path": "persian/textures/gltf_embedded_0.png",
+        "bytes": 4896077,
+        "sha256": "a2603dd7fb05225b62f1929f3b8003a4839c79986d1445226121aabe58a5d40a"
+      },
+      {
+        "path": "persian/textures/gltf_embedded_1@channels=B.jpeg",
+        "bytes": 1319814,
+        "sha256": "c5909fd983b8c79df477cc3e6389ad3743ccafe7758cdb77035dfa63ceae4bb4"
+      },
+      {
+        "path": "persian/textures/gltf_embedded_1@channels=G.jpeg",
+        "bytes": 1428831,
+        "sha256": "1c08c3b5f6dc006925d6d94124a00aefa7deb1c412964e2c8de09abce1218696"
+      },
+      {
+        "path": "persian/textures/gltf_embedded_1@channels=R.jpeg",
+        "bytes": 1461834,
+        "sha256": "155f912fba41eb7f6e254430246d195cfcecd6e7897d3cb3cd7ed541416b0522"
+      },
+      {
+        "path": "persian/textures/gltf_embedded_2.jpeg",
+        "bytes": 2701760,
+        "sha256": "6dcffde6d9c2d8eab0c1aab5683bf351f8af4d23d70b373f9b53ef23be2c15ab"
+      }
+    ]
+  },
+  {
+    "file": "norwegian-forest-source.zip",
+    "bytes": 20962331,
+    "sha256": "02e8d4d6bf2ce0b6fb46b923b6a9cc30f0105c7c39087b1d55c68778c46fc482",
+    "provenance": "Baidu Netdisk download recorded in docs/USER-CAT-MODELS.md; repackaged without .DS_Store",
+    "license": "Author and redistribution permission not verified; no new license granted",
+    "members": [
+      {
+        "path": "norwegian-forest/source/Norwegianforest.glb",
+        "bytes": 9968108,
+        "sha256": "6b027c8d85a79d6c2a06e24939e0faec13b0aee67c84207249018197e4a756f1"
+      },
+      {
+        "path": "norwegian-forest/textures/gltf_embedded_0.png",
+        "bytes": 5040081,
+        "sha256": "fc5b6aab2afa5e366ea9a43df13b26448fa13a931f731647f3286e792a2a5391"
+      },
+      {
+        "path": "norwegian-forest/textures/gltf_embedded_1@channels=B.jpeg",
+        "bytes": 1356964,
+        "sha256": "8970e661b8052b6425ccd2012e0d34af00558fc170a40de939832c11b035e873"
+      },
+      {
+        "path": "norwegian-forest/textures/gltf_embedded_1@channels=G.jpeg",
+        "bytes": 1608256,
+        "sha256": "de5efc0714a6a331f7d9f74fe0a1e8acc959b61dba9331060c4be21316480f6e"
+      },
+      {
+        "path": "norwegian-forest/textures/gltf_embedded_1@channels=R.jpeg",
+        "bytes": 1750922,
+        "sha256": "ee836e9a433931b8f34c9dd0ecf7a41c9bc755e1ba9ecf7241c4d1f12b79bd09"
+      },
+      {
+        "path": "norwegian-forest/textures/gltf_embedded_2.jpeg",
+        "bytes": 2433660,
+        "sha256": "2966f7ed986c847971fc69191eacc8a6abc39d4e10ed78d8334a2f90108d223a"
+      }
+    ]
+  },
+  {
+    "file": "sphynx-source.zip",
+    "bytes": 20489745,
+    "sha256": "99b7f5574e24b34171efd1e04eb3aaad65aaed289b52f3b2bc5b6ffe98ef5061",
+    "provenance": "Baidu Netdisk download recorded in docs/USER-CAT-MODELS.md; repackaged without .DS_Store",
+    "license": "Author and redistribution permission not verified; no new license granted",
+    "members": [
+      {
+        "path": "sphynx/source/Sphynx.blend",
+        "bytes": 13429112,
+        "sha256": "636b2d40f9e6950a6c16ebaf60d88ad874cb31a64d49db97e1ae067615c82770"
+      },
+      {
+        "path": "sphynx/textures/Sphynx_Albedo.jpeg",
+        "bytes": 275016,
+        "sha256": "2a6578f88b55ca0ddac2b3415894736802e44fa099bdd92c20f55738ed4164cb"
+      },
+      {
+        "path": "sphynx/textures/Sphynx_Gloss@channels=B.jpeg",
+        "bytes": 1019618,
+        "sha256": "056bb3cdfaf081484395ae78cdd09dea63e6fcee802fc39b77311a6ef4ed789e"
+      },
+      {
+        "path": "sphynx/textures/Sphynx_Gloss@channels=G.jpeg",
+        "bytes": 1379378,
+        "sha256": "51de9d786af19f6b83a519c3323b6e40603e7415c1a05d9cefff2287ae8f6aa9"
+      },
+      {
+        "path": "sphynx/textures/Sphynx_Gloss@channels=R.jpeg",
+        "bytes": 1341267,
+        "sha256": "6688ed8a6ad620e1010337837b8ffb1f160a6488677dad8a6d5026fe005d2a8c"
+      },
+      {
+        "path": "sphynx/textures/Sphynx_Normal.png",
+        "bytes": 4379401,
+        "sha256": "de148f4347e98aff6e3e298b476f963a5709afa726c426025eee0f0c615f1d6a"
+      }
+    ]
+  },
+  {
+    "file": "JC0L219A2-GreyTabbyCat-obj.zip",
+    "bytes": 3989800,
+    "sha256": "418c1f6dccb49821a3e0b31eb149cf1906ae3a9464d6b752ac8eb244cc9182a0",
+    "provenance": "Existing local GreyTabbyCat OBJ archive; download source not verified; original bytes preserved",
+    "license": "Not verified; no license file in archive",
+    "note": "OBJ only. Referenced MTL, textures, rig/animation, and separate Blender file are not included."
+  }
+]
